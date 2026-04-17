@@ -3,677 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Your Idea | Ree Force</title>
+    <title>Submit Your Idea | Codvex</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-dark: #121212;
-            --secondary-dark: #1e1e1e;
-            --text-dark: #ffffff;
-            --accent-dark: #00c853;
-            --gradient-dark: linear-gradient(135deg, #00c853, #18ffff);
-            --primary-light: #f5f5f5;
-            --secondary-light: #ffffff;
-            --text-light: #121212;
-            --accent-light: #00a045;
-            --gradient-light: linear-gradient(135deg, #18ffff, #00c853);
-            --primary: var(--primary-dark);
-            --secondary: var(--secondary-dark);
-            --text: var(--text-dark);
-            --accent: var(--accent-dark);
-            --gradient: var(--gradient-dark);
-            --transition: all 0.3s ease;
+            --accent: #7c5cfc;
+            --accent2: #00e5c8;
+            --gradient: linear-gradient(135deg, #7c5cfc, #00e5c8);
+            --gradient-text: linear-gradient(90deg, #7c5cfc, #00e5c8);
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --card: #16161f;
+            --text: #f0f0ff;
+            --muted: #9090aa;
+            --border: rgba(124,92,252,0.2);
+            --error: #fc6b6b;
+            --success: #00e5c8;
         }
-
         .light-theme {
-            --primary: var(--primary-light);
-            --secondary: var(--secondary-light);
-            --text: var(--text-light);
-            --accent: var(--accent-light);
-            --gradient: var(--gradient-light);
+            --bg: #f5f4ff; --surface: #eeedf8; --card: #ffffff;
+            --text: #0d0b1e; --muted: #5a5575; --border: rgba(124,92,252,0.25);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: var(--transition);
-        }
-
-        body {
-            background-color: var(--primary);
-            color: var(--text);
-            min-height: 100vh;
-            transition: background-color 0.5s ease, color 0.5s ease;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; transition:background 0.4s,color 0.4s; }
+        h1,h2,h3,.logo-text { font-family:'Syne',sans-serif; }
 
         header {
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            background-color: rgba(18, 18, 18, 0.9);
+            padding:1.2rem 5%; display:flex; justify-content:space-between; align-items:center;
+            position:fixed; width:100%; z-index:100; backdrop-filter:blur(16px);
+            background:rgba(10,10,15,0.82); border-bottom:1px solid var(--border);
         }
-
-        .light-theme header {
-            background-color: rgba(245, 245, 245, 0.9);
+        .light-theme header { background:rgba(245,244,255,0.88); }
+        .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+        .logo-mark {
+            width:34px; height:34px; border-radius:9px; background:var(--gradient);
+            display:flex; align-items:center; justify-content:center; font-size:1rem;
         }
+        .logo-text { font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; background:var(--gradient-text); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .theme-btn { background:none; border:1px solid var(--border); color:var(--text); width:36px; height:36px; border-radius:9px; cursor:pointer; font-size:0.9rem; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
+        .page-wrap { padding:8rem 5% 4rem; max-width:960px; margin:0 auto; }
+        .page-header { text-align:center; margin-bottom:3rem; }
+        .page-label { font-size:0.78rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:0.8rem; }
+        .page-title { font-size:clamp(2rem,4vw,2.8rem); font-weight:800; letter-spacing:-0.03em; margin-bottom:0.8rem; }
+        .page-sub { color:var(--muted); font-size:1rem; line-height:1.65; max-width:580px; margin:0 auto; }
+
+        /* Progress */
+        .progress-wrap { margin-bottom:2.5rem; }
+        .progress-track { height:5px; background:var(--surface); border-radius:99px; overflow:hidden; margin-bottom:1.5rem; }
+        .progress-fill { height:100%; background:var(--gradient); border-radius:99px; width:20%; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
+        .steps { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; }
+        .step-pill {
+            display:flex; align-items:center; gap:8px; padding:6px 16px;
+            border-radius:99px; border:1px solid var(--border); font-size:0.82rem;
+            font-weight:500; color:var(--muted); transition:all 0.3s; cursor:default;
         }
+        .step-pill.active { background:var(--gradient); color:white; border-color:transparent; }
+        .step-pill.done { border-color:var(--accent2); color:var(--accent2); }
+        .step-num { font-weight:700; font-family:'Syne',sans-serif; }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-            background: var(--gradient);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Card */
+        .form-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; }
+        .light-theme .form-card { box-shadow:0 10px 40px rgba(0,0,0,0.07); }
+        .section-head { margin-bottom:2rem; }
+        .section-head h2 { font-size:1.6rem; letter-spacing:-0.02em; }
+        .section-head p { color:var(--muted); font-size:0.9rem; margin-top:0.3rem; }
+
+        /* Form elements */
+        .form-section { display:none; animation:fadeUp 0.4s ease forwards; }
+        .form-section.active { display:block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+        .form-group { margin-bottom:1.4rem; }
+        label { display:block; font-size:0.86rem; font-weight:500; color:var(--muted); margin-bottom:0.45rem; }
+        label .req { color:var(--accent); }
+        input[type=text], input[type=email], input[type=tel], textarea, select {
+            width:100%; padding:0.85rem 1rem; background:var(--bg); border:1px solid var(--border);
+            border-radius:10px; color:var(--text); font-size:0.95rem; font-family:'DM Sans',sans-serif;
+            outline:none; transition:border-color 0.2s, box-shadow 0.2s;
         }
+        .light-theme input, .light-theme textarea, .light-theme select { background:var(--surface); }
+        input:focus, textarea:focus, select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(124,92,252,0.15); }
+        input.err, textarea.err, select.err { border-color:var(--error); box-shadow:0 0 0 3px rgba(252,107,107,0.15); }
+        textarea { min-height:110px; resize:vertical; }
+        select option { background:var(--card); }
+        .err-msg { color:var(--error); font-size:0.78rem; margin-top:0.3rem; display:none; }
+        .word-count { text-align:right; font-size:0.78rem; color:var(--muted); margin-top:0.25rem; }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
+        /* Category grid */
+        .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.8rem; margin-top:0.5rem; }
+        .cat-card {
+            padding:1.1rem 0.8rem; background:var(--bg); border:1px solid var(--border);
+            border-radius:12px; text-align:center; cursor:pointer; transition:all 0.2s;
         }
+        .light-theme .cat-card { background:var(--surface); }
+        .cat-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+        .cat-card.active { background:var(--gradient); border-color:transparent; color:white; }
+        .cat-icon { font-size:1.6rem; margin-bottom:0.4rem; display:block; }
+        .cat-name { font-size:0.8rem; font-weight:500; }
+        select[style*="display:none"] { display:none !important; }
 
-        .theme-toggle:hover {
-            background-color: rgba(0, 200, 83, 0.1);
+        /* File upload */
+        .file-zone {
+            border:2px dashed var(--border); border-radius:12px;
+            padding:2.5rem 1.5rem; text-align:center; cursor:pointer;
+            transition:all 0.3s; background:rgba(124,92,252,0.03);
+            position:relative;
         }
-
-        .submit-form-container {
-            padding: 10rem 5% 5rem;
-            min-height: 100vh;
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .form-header h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .form-header p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .progress-container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto 2rem;
-            height: 8px;
-            background-color: var(--secondary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 20%;
-            background: var(--gradient);
-            transition: width 0.5s ease;
-        }
-
-        .step-indicators {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 1rem;
-            position: relative;
-            min-width: 120px;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            border: 2px solid var(--secondary);
-            transition: all 0.3s ease;
-        }
-
-        .step.active .step-number {
-            background: var(--gradient);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .step.completed .step-number {
-            background: var(--accent);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .form-card {
-            background-color: var(--secondary);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .light-theme .form-card {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-        }
-
-        .form-section {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
-        }
-
-        .form-section.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .form-section h2 {
-            margin-bottom: 2rem;
-            color: var(--accent);
-            font-size: 1.8rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text);
-        }
-
-        .required::after {
-            content: " *";
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid transparent;
-            background-color: var(--primary);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
-        }
-
-        input.error,
-        textarea.error,
-        select.error {
-            border-color: #ff5252;
-            box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.2);
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .word-counter {
-            text-align: right;
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-            opacity: 0.7;
-        }
-
-        .enhanced-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .category-card {
-            padding: 1.5rem 1rem;
-            background-color: var(--primary);
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .category-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .category-card.active {
-            background: var(--gradient);
-            color: white;
-            border-color: transparent;
-        }
-
-        .category-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .file-upload {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 3rem 2rem;
-            border: 2px dashed var(--accent);
-            border-radius: 8px;
-            background-color: rgba(0, 200, 83, 0.05);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .file-upload:hover {
-            background-color: rgba(0, 200, 83, 0.1);
-        }
-
-        .file-upload.dragover {
-            background-color: rgba(0, 200, 83, 0.15);
-            border-color: var(--accent);
-            transform: scale(1.02);
-        }
-
-        .file-upload input {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .file-list {
-            margin-top: 1.5rem;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
+        .file-zone:hover, .file-zone.dragover { border-color:var(--accent); background:rgba(124,92,252,0.07); }
+        .file-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+        .upload-icon { font-size:2.5rem; margin-bottom:0.8rem; color:var(--accent); }
+        .file-zone p { color:var(--muted); font-size:0.9rem; line-height:1.55; }
+        .file-zone strong { color:var(--text); }
+        .file-list { margin-top:1.2rem; display:flex; flex-direction:column; gap:0.6rem; }
         .file-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            background-color: rgba(0, 200, 83, 0.05);
-            border-left: 3px solid var(--accent);
-            border-radius: 5px;
-            margin-bottom: 0.8rem;
-            transition: all 0.3s ease;
+            display:flex; align-items:center; gap:0.8rem; padding:0.8rem 1rem;
+            background:rgba(124,92,252,0.06); border-radius:10px;
+            border-left:3px solid var(--accent);
         }
+        .fi-icon { font-size:1.3rem; flex-shrink:0; }
+        .fi-info { flex:1; min-width:0; }
+        .fi-name { font-size:0.88rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .fi-size { font-size:0.75rem; color:var(--muted); }
+        .fi-remove { background:none; border:none; color:var(--error); cursor:pointer; font-size:1.2rem; padding:0 4px; flex-shrink:0; }
 
-        .file-item:hover {
-            background-color: rgba(0, 200, 83, 0.1);
+        /* Summary */
+        .summary-block { background:var(--bg); border-radius:12px; padding:1.4rem; margin-bottom:1.2rem; border:1px solid var(--border); }
+        .light-theme .summary-block { background:var(--surface); }
+        .summary-block h3 { font-size:0.82rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:1rem; font-family:'Syne',sans-serif; }
+        .sum-row { display:flex; gap:0.8rem; margin-bottom:0.6rem; font-size:0.9rem; }
+        .sum-key { color:var(--muted); flex-shrink:0; min-width:130px; }
+        .sum-val { color:var(--text); word-break:break-word; }
+
+        /* Checkbox */
+        .check-group { display:flex; align-items:flex-start; gap:10px; margin:1.5rem 0; }
+        input[type=checkbox] { width:18px; height:18px; min-width:18px; margin-top:2px; accent-color:var(--accent); cursor:pointer; }
+        .check-label { font-size:0.9rem; color:var(--muted); line-height:1.5; cursor:pointer; }
+        .check-label a { color:var(--accent); }
+
+        /* Buttons */
+        .form-btns { display:flex; justify-content:space-between; margin-top:2rem; gap:1rem; }
+        .btn-next, .btn-submit {
+            padding:0.85rem 2rem; background:var(--gradient); border:none;
+            border-radius:50px; color:white; font-weight:700; cursor:pointer;
+            font-size:0.95rem; font-family:'DM Sans',sans-serif; transition:all 0.2s;
         }
-
-        .file-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            background-color: var(--accent);
-            color: white;
+        .btn-next:hover:not(:disabled), .btn-submit:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 28px rgba(124,92,252,0.3); }
+        .btn-prev {
+            padding:0.85rem 2rem; background:transparent; border:1.5px solid var(--border);
+            border-radius:50px; color:var(--text); font-weight:500; cursor:pointer;
+            font-size:0.95rem; font-family:'DM Sans',sans-serif; transition:all 0.2s;
         }
+        .btn-prev:hover { border-color:var(--accent); color:var(--accent); }
+        .btn-submit:disabled { opacity:0.5; cursor:not-allowed; }
+        .btn-spacer { flex:1; }
 
-        .file-info {
-            flex-grow: 1;
+        /* Success */
+        .success-screen { display:none; text-align:center; padding:3rem 1rem; }
+        .success-screen.active { display:block; animation:fadeUp 0.5s ease; }
+        .success-icon { font-size:3.5rem; margin-bottom:1.2rem; }
+        .success-screen h2 { font-size:1.8rem; margin-bottom:0.8rem; }
+        .success-screen p { color:var(--muted); line-height:1.65; margin-bottom:1.5rem; }
+        .success-box {
+            background:rgba(0,229,200,0.08); border:1px solid rgba(0,229,200,0.25);
+            border-radius:14px; padding:1.5rem; margin:1.5rem 0; text-align:left; font-size:0.92rem; line-height:1.7;
         }
+        .success-box p { color:var(--text); margin-bottom:0.5rem; }
+        .success-box p:last-child { margin-bottom:0; }
+        .sub-id { background:var(--bg); border-radius:8px; padding:8px 14px; font-size:0.82rem; color:var(--accent); display:inline-block; margin-top:0.5rem; font-family:monospace; border:1px solid var(--border); }
 
-        .file-name {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
+        /* Notification */
+        .notif { position:fixed; top:80px; right:20px; padding:12px 18px; border-radius:12px; color:white; z-index:9999; font-size:0.88rem; max-width:300px; transform:translateX(120%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+        .notif.show { transform:translateX(0); }
+        .notif.success { background:linear-gradient(135deg,#00b87a,#00e5c8); }
+        .notif.error { background:linear-gradient(135deg,#e53e3e,#fc6b6b); }
 
-        .file-size {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .file-remove {
-            background: none;
-            border: none;
-            color: #ff5252;
-            cursor: pointer;
-            font-size: 1.5rem;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .file-remove:hover {
-            background-color: rgba(255, 82, 82, 0.1);
-        }
-
-        .form-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
-            font-size: 1rem;
-            min-width: 120px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 2px solid var(--accent);
-            color: var(--accent);
-        }
-
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .summary-section {
-            background-color: var(--primary);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .summary-section h3 {
-            margin-bottom: 1rem;
-            color: var(--accent);
-            border-bottom: 1px solid rgba(0, 200, 83, 0.3);
-            padding-bottom: 0.5rem;
-        }
-
-        .summary-item {
-            margin-bottom: 0.8rem;
-            line-height: 1.5;
-        }
-
-        .summary-item strong {
-            color: var(--text);
-            display: inline-block;
-            min-width: 150px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            margin: 1.5rem 0;
-        }
-
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            margin: 0;
-            cursor: pointer;
-        }
-
-        .checkbox-label {
-            cursor: pointer;
-            line-height: 1.4;
-        }
-
-        .success-message {
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .success-message h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: #fff;
-            max-width: 400px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s ease;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .notification.error {
-            background-color: #ff5252;
-        }
-
-        .notification.success {
-            background-color: var(--accent);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .form-header h1 {
-                font-size: 2rem;
-            }
-
-            .form-card {
-                padding: 1.5rem;
-            }
-
-            .form-buttons {
-                flex-direction: column-reverse;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .enhanced-categories {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-
-            .step-indicators {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 1rem;
-            }
-
-            .step {
-                min-width: 100px;
-                flex-shrink: 0;
-            }
+        @media(max-width:600px) {
+            .form-card { padding:1.5rem; }
+            .form-btns { flex-direction:column-reverse; }
+            .btn-next,.btn-prev,.btn-submit { width:100%; text-align:center; }
+            .cat-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); }
         }
     </style>
 </head>
 <body>
     <header>
-        <a href="#" class="logo">
-            <div class="logo-icon">⚡</div>
-            Ree Force
+        <a href="codvex.html" class="logo">
+            <div class="logo-mark">⚡</div>
+            <span class="logo-text">Codvex</span>
         </a>
-        <button class="theme-toggle">🌓</button>
+        <button class="theme-btn" id="themeBtn">🌓</button>
     </header>
 
-    <div class="submit-form-container">
-        <div class="form-header">
-            <h1>Submit Your Website Idea</h1>
-            <p>Share your website concept with us, and our team will evaluate it. If approved, we'll build and deploy your website completely free of charge through our revenue-sharing model.</p>
+    <div class="page-wrap">
+        <div class="page-header">
+            <div class="page-label">Free Website Development</div>
+            <h1 class="page-title">Submit Your Website Idea</h1>
+            <p class="page-sub">Share your concept. If approved, our team builds and deploys your website completely free — you keep 80% of revenue.</p>
         </div>
 
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-
-        <div class="step-indicators">
-            <div class="step active" data-step="1">
-                <div class="step-number">1</div>
-                <div class="step-label">Basic Info</div>
-            </div>
-            <div class="step" data-step="2">
-                <div class="step-number">2</div>
-                <div class="step-label">Website Details</div>
-            </div>
-            <div class="step" data-step="3">
-                <div class="step-number">3</div>
-                <div class="step-label">Audience & Revenue</div>
-            </div>
-            <div class="step" data-step="4">
-                <div class="step-number">4</div>
-                <div class="step-label">Files & References</div>
-            </div>
-            <div class="step" data-step="5">
-                <div class="step-number">5</div>
-                <div class="step-label">Review & Submit</div>
-            </div>
+        <!-- Progress -->
+        <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="steps" id="stepsRow"></div>
         </div>
 
         <div class="form-card">
-           <form id="websiteIdeaForm" action="http://localhost:5000/api/submityouridea" method="post" enctype="multipart/form-data">
-                <!-- Step 1: Basic Information -->
+            <form id="ideaForm" novalidate>
+
+                <!-- Step 1 -->
                 <div class="form-section active" data-step="1">
-                    <h2>Basic Information</h2>
-                    <div class="form-group">
-                        <label for="name" class="required">Your Full Name</label>
-                        <input type="text" id="name" name="name" required>
+                    <div class="section-head">
+                        <h2>Basic Information</h2>
+                        <p>Tell us who you are so we can get in touch.</p>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="required">Email Address</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="name">Full Name <span class="req">*</span></label>
+                        <input type="text" id="name" name="name" placeholder="Your full name" required>
+                        <div class="err-msg" id="err-name">Please enter your name.</div>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone">
+                        <label for="email">Email Address <span class="req">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                        <div class="err-msg" id="err-email">Please enter a valid email.</div>
                     </div>
-                    <div class="form-buttons">
-                        <div></div>
-                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210">
+                    </div>
+                    <div class="form-btns">
+                        <div class="btn-spacer"></div>
+                        <button type="button" class="btn-next" data-next="2">Next →</button>
                     </div>
                 </div>
 
-                <!-- Step 2: Website Details -->
+                <!-- Step 2 -->
                 <div class="form-section" data-step="2">
-                    <h2>Website Details</h2>
-                    <div class="form-group">
-                        <label for="websiteName" class="required">Website Name</label>
-                        <input type="text" id="websiteName" name="websiteName" required placeholder="Enter your website name">
+                    <div class="section-head">
+                        <h2>Website Details</h2>
+                        <p>Describe your website concept so we can understand your vision.</p>
                     </div>
                     <div class="form-group">
-                        <label class="required">Website Category</label>
-                        <select id="category" name="category" required style="display: none;">
-                            <option value="">Select a category</option>
+                        <label for="websiteName">Website Name <span class="req">*</span></label>
+                        <input type="text" id="websiteName" name="websiteName" placeholder="e.g. TechBlog India" required>
+                        <div class="err-msg" id="err-websiteName">Please enter a website name.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Category <span class="req">*</span></label>
+                        <select id="category" name="category" required style="display:none;">
+                            <option value="">Select</option>
                             <option value="blog">Blog</option>
                             <option value="ecommerce">E-Commerce</option>
                             <option value="portfolio">Portfolio</option>
@@ -684,31 +262,37 @@
                             <option value="social">Social Media</option>
                             <option value="other">Other</option>
                         </select>
-                        <div class="enhanced-categories"></div>
+                        <div class="cat-grid" id="catGrid"></div>
+                        <div class="err-msg" id="err-category">Please select a category.</div>
                     </div>
                     <div class="form-group">
-                        <label for="description" class="required">Website Description</label>
-                        <textarea id="description" name="description" required placeholder="Describe your website idea in detail. What is it about? What features would you like it to have?"></textarea>
-                        <div class="word-counter">0 words</div>
+                        <label for="description">Website Description <span class="req">*</span></label>
+                        <textarea id="description" name="description" placeholder="Describe your website idea in detail. What pages, features, and goals?" required></textarea>
+                        <div class="word-count"><span id="wc-description">0</span> words</div>
+                        <div class="err-msg" id="err-description">Please describe your website idea.</div>
                     </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    <div class="form-btns">
+                        <button type="button" class="btn-prev" data-prev="1">← Back</button>
+                        <button type="button" class="btn-next" data-next="3">Next →</button>
                     </div>
                 </div>
 
-                <!-- Step 3: Audience & Monetization -->
+                <!-- Step 3 -->
                 <div class="form-section" data-step="3">
-                    <h2>Audience & Revenue</h2>
-                    <div class="form-group">
-                        <label for="targetAudience" class="required">Target Audience</label>
-                        <textarea id="targetAudience" name="targetAudience" required placeholder="Describe your target audience (age group, interests, demographics, etc.)"></textarea>
-                        <div class="word-counter">0 words</div>
+                    <div class="section-head">
+                        <h2>Audience & Revenue</h2>
+                        <p>Help us understand who will use your site and how it'll earn.</p>
                     </div>
                     <div class="form-group">
-                        <label for="monetization" class="required">Monetization Strategy</label>
+                        <label for="targetAudience">Target Audience <span class="req">*</span></label>
+                        <textarea id="targetAudience" name="targetAudience" placeholder="Who is your website for? Age, interests, location, etc." required></textarea>
+                        <div class="word-count"><span id="wc-targetAudience">0</span> words</div>
+                        <div class="err-msg" id="err-targetAudience">Please describe your target audience.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="monetization">Monetization Strategy <span class="req">*</span></label>
                         <select id="monetization" name="monetization" required>
-                            <option value="">Select a monetization strategy</option>
+                            <option value="">Select a strategy</option>
                             <option value="ads">Advertisements</option>
                             <option value="subscriptions">Subscriptions</option>
                             <option value="ecommerce">Product Sales</option>
@@ -716,550 +300,299 @@
                             <option value="donations">Donations</option>
                             <option value="other">Other</option>
                         </select>
+                        <div class="err-msg" id="err-monetization">Please select a monetization strategy.</div>
                     </div>
                     <div class="form-group">
-                        <label for="monetizationDetails">Monetization Details</label>
-                        <textarea id="monetizationDetails" name="monetizationDetails" placeholder="Provide more details about your monetization plan"></textarea>
-                        <div class="word-counter">0 words</div>
+                        <label for="monetizationDetails">Monetization Details <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+                        <textarea id="monetizationDetails" name="monetizationDetails" placeholder="More details about your revenue plan..."></textarea>
+                        <div class="word-count"><span id="wc-monetizationDetails">0</span> words</div>
                     </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    <div class="form-btns">
+                        <button type="button" class="btn-prev" data-prev="2">← Back</button>
+                        <button type="button" class="btn-next" data-next="4">Next →</button>
                     </div>
                 </div>
 
-                <!-- Step 4: Files & References -->
+                <!-- Step 4 -->
                 <div class="form-section" data-step="4">
-                    <h2>References & Supporting Files</h2>
-                    <div class="form-group">
-                        <label for="referenceLinks">Reference Links</label>
-                        <textarea id="referenceLinks" name="referenceLinks" placeholder="Enter URLs or references that inspire your idea (one per line)"></textarea>
+                    <div class="section-head">
+                        <h2>References & Files</h2>
+                        <p>Share inspiration and any supporting documents.</p>
                     </div>
                     <div class="form-group">
-                        <label>Upload Supporting Files</label>
-                        <div class="file-upload">
-                            <input type="file" id="files" name="files[]" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.html,.css,.js">
+                        <label for="referenceLinks">Reference Links <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+                        <textarea id="referenceLinks" name="referenceLinks" placeholder="Paste URLs that inspire your idea, one per line&#10;https://example.com"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Files <span style="color:var(--muted);font-weight:400;">(optional, max 10MB each)</span></label>
+                        <div class="file-zone" id="fileZone">
+                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.html,.css,.js">
                             <div class="upload-icon">📁</div>
-                            <p><strong>Drag & drop files here or click to upload</strong><br>
-                            Supported: PDF, DOC, PNG, JPG, HTML, CSS, JS (Max 10MB each)</p>
+                            <p><strong>Drag & drop files or click to browse</strong><br>PDF, DOC, PNG, JPG, HTML, CSS, JS supported</p>
                         </div>
-                        <div class="file-list"></div>
+                        <div class="file-list" id="fileList"></div>
                     </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    <div class="form-btns">
+                        <button type="button" class="btn-prev" data-prev="3">← Back</button>
+                        <button type="button" class="btn-next" data-next="5">Next →</button>
                     </div>
                 </div>
 
-                <!-- Step 5: Review & Submit -->
+                <!-- Step 5 -->
                 <div class="form-section" data-step="5">
-                    <h2>Review & Submit</h2>
-                    <div class="summary-section">
-                        <h3>Basic Information</h3>
-                        <div class="summary-item"><strong>Name:</strong> <span id="summary-name">N/A</span></div>
-                        <div class="summary-item"><strong>Email:</strong> <span id="summary-email">N/A</span></div>
-                        <div class="summary-item"><strong>Phone:</strong> <span id="summary-phone">N/A</span></div>
+                    <div class="section-head">
+                        <h2>Review & Submit</h2>
+                        <p>Double-check everything before submitting your idea.</p>
                     </div>
-                    <div class="summary-section">
-                        <h3>Website Details</h3>
-                        <div class="summary-item"><strong>Website Name:</strong> <span id="summary-websiteName">N/A</span></div>
-                        <div class="summary-item"><strong>Category:</strong> <span id="summary-category">N/A</span></div>
-                        <div class="summary-item"><strong>Description:</strong> <span id="summary-description">N/A</span></div>
-                    </div>
-                    <div class="summary-section">
-                        <h3>Audience & Revenue</h3>
-                        <div class="summary-item"><strong>Target Audience:</strong> <span id="summary-targetAudience">N/A</span></div>
-                        <div class="summary-item"><strong>Monetization:</strong> <span id="summary-monetization">N/A</span></div>
-                        <div class="summary-item"><strong>Monetization Details:</strong> <span id="summary-monetizationDetails">N/A</span></div>
-                    </div>
-                    <div class="summary-section">
-                        <h3>References & Files</h3>
-                        <div class="summary-item"><strong>Reference Links:</strong> <span id="summary-referenceLinks">None</span></div>
-                        <div class="summary-item"><strong>Uploaded Files:</strong> <span id="summary-files">None</span></div>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms" class="checkbox-label">I agree to the Terms and Conditions and understand the revenue-sharing model (80% to me, 20% to Ree Force).</label>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-                        <button type="submit" class="btn btn-primary submit-btn" disabled>Submit Idea</button>
-                    </div>
-                </div>
 
-                <!-- Success Message -->
-                <div class="form-section success-message" data-step="success" style="display: none;">
-                    <div class="success-icon">✅</div>
-                    <h2>Submission Successful!</h2>
-                    <p>Thank you for submitting your website idea. We'll review it and get back to you within 5-7 business days.</p>
-                    <button type="button" class="btn btn-primary" onclick="resetForm()">Submit Another Idea</button>
+                    <div class="summary-block">
+                        <h3>Basic Info</h3>
+                        <div class="sum-row"><span class="sum-key">Name</span><span class="sum-val" id="s-name">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Email</span><span class="sum-val" id="s-email">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Phone</span><span class="sum-val" id="s-phone">—</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <h3>Website Details</h3>
+                        <div class="sum-row"><span class="sum-key">Website Name</span><span class="sum-val" id="s-websiteName">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Category</span><span class="sum-val" id="s-category">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Description</span><span class="sum-val" id="s-description">—</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <h3>Audience & Revenue</h3>
+                        <div class="sum-row"><span class="sum-key">Target Audience</span><span class="sum-val" id="s-targetAudience">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Monetization</span><span class="sum-val" id="s-monetization">—</span></div>
+                        <div class="sum-row"><span class="sum-key">Details</span><span class="sum-val" id="s-monetizationDetails">—</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <h3>References & Files</h3>
+                        <div class="sum-row"><span class="sum-key">Links</span><span class="sum-val" id="s-referenceLinks">None</span></div>
+                        <div class="sum-row"><span class="sum-key">Files</span><span class="sum-val" id="s-files">None</span></div>
+                    </div>
+
+                    <div class="check-group">
+                        <input type="checkbox" id="terms">
+                        <label for="terms" class="check-label">I agree to the terms and conditions and understand the revenue-sharing model — 80% to me, 20% to Codvex for hosting and maintenance.</label>
+                    </div>
+
+                    <div class="form-btns">
+                        <button type="button" class="btn-prev" data-prev="4">← Back</button>
+                        <button type="submit" class="btn-submit" id="submitBtn" disabled>Submit Idea ✓</button>
+                    </div>
                 </div>
             </form>
+
+            <!-- Success -->
+            <div class="success-screen" id="successScreen">
+                <div class="success-icon">🎉</div>
+                <h2>Idea Submitted!</h2>
+                <p>Thank you for sharing your website idea with Codvex. Our team will review it carefully.</p>
+                <div class="success-box">
+                    <p>📧 <strong>Check your inbox</strong> — a confirmation email is on its way.</p>
+                    <p>⏱️ <strong>Review timeline:</strong> 5–7 business days for our team to evaluate your idea.</p>
+                    <p>📞 <strong>If approved</strong> — Sayed, Umair or Aman will reach out to discuss next steps.</p>
+                </div>
+                <p style="font-size:0.85rem;color:var(--muted);">Submission ID: <span class="sub-id" id="subId"></span></p>
+                <br>
+                <button class="btn-next" onclick="window.location.href='codvex.html'" style="display:inline-block;text-decoration:none;border:none;cursor:pointer;">← Back to Codvex</button>
+                &nbsp;&nbsp;
+                <button class="btn-prev" onclick="resetForm()" style="display:inline-block;border-radius:50px;padding:0.85rem 2rem;">Submit Another</button>
+            </div>
         </div>
     </div>
 
-   <script>
-    // Application state
+    <div class="notif" id="notifEl"></div>
+
+    <script>
+    // Config
+    const STEPS = 5;
+    const STEP_LABELS = ['Basic Info','Website Details','Audience & Revenue','Files & Refs','Review'];
+    const CATEGORIES = [
+        {v:'blog',icon:'📝',name:'Blog'},
+        {v:'ecommerce',icon:'🛒',name:'E-Commerce'},
+        {v:'portfolio',icon:'🎨',name:'Portfolio'},
+        {v:'business',icon:'💼',name:'Business'},
+        {v:'news',icon:'📰',name:'News'},
+        {v:'entertainment',icon:'🎬',name:'Entertainment'},
+        {v:'education',icon:'📚',name:'Educational'},
+        {v:'social',icon:'🌐',name:'Social'},
+        {v:'other',icon:'❓',name:'Other'},
+    ];
     let currentStep = 1;
     let selectedFiles = new Map();
-    const totalSteps = 5;
 
-    // DOM elements
-    const form = document.getElementById('websiteIdeaForm');
-    const progressBar = document.querySelector('.progress-bar');
-    const steps = document.querySelectorAll('.step');
-    const sections = document.querySelectorAll('.form-section');
-    const nextButtons = document.querySelectorAll('.next-btn');
-    const prevButtons = document.querySelectorAll('.prev-btn');
-    const submitButton = document.querySelector('.submit-btn');
-    const termsCheckbox = document.getElementById('terms');
+    // Theme
+    const themeBtn = document.getElementById('themeBtn');
+    if(localStorage.getItem('codvex-theme')==='light'){document.body.classList.add('light-theme');themeBtn.textContent='🌙';}
+    themeBtn.addEventListener('click',()=>{document.body.classList.toggle('light-theme');const l=document.body.classList.contains('light-theme');themeBtn.textContent=l?'🌙':'🌓';localStorage.setItem('codvex-theme',l?'light':'dark');});
 
-    // Initialize the form
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeTheme();
-        initializeCategoryCards();
-        initializeFileUpload();
-        initializeWordCounters();
-        initializeFormValidation();
-        initializeNavigation();
-        updateSummary();
+    // Build step pills
+    const stepsRow = document.getElementById('stepsRow');
+    STEP_LABELS.forEach((label,i)=>{
+        const pill = document.createElement('div');
+        pill.className = 'step-pill' + (i===0?' active':'');
+        pill.dataset.step = i+1;
+        pill.innerHTML = `<span class="step-num">${i+1}</span> ${label}`;
+        stepsRow.appendChild(pill);
     });
 
-    // Theme management
-    function initializeTheme() {
-        const themeToggle = document.querySelector('.theme-toggle');
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-            themeToggle.textContent = '🌙';
-        }
-
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('light-theme');
-            const isLight = document.body.classList.contains('light-theme');
-            themeToggle.textContent = isLight ? '🌙' : '🌓';
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    // Build category cards
+    const catGrid = document.getElementById('catGrid');
+    const categorySelect = document.getElementById('category');
+    CATEGORIES.forEach(cat=>{
+        const card = document.createElement('div');
+        card.className='cat-card'; card.dataset.value=cat.v;
+        card.innerHTML=`<span class="cat-icon">${cat.icon}</span><div class="cat-name">${cat.name}</div>`;
+        card.addEventListener('click',()=>{
+            catGrid.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
+            card.classList.add('active'); categorySelect.value=cat.v;
         });
-    }
+        catGrid.appendChild(card);
+    });
 
-    // Category cards initialization
-    function initializeCategoryCards() {
-        const categorySelect = document.getElementById('category');
-        const container = document.querySelector('.enhanced-categories');
-        const categories = [
-            { value: 'blog', text: 'Blog', icon: '📝' },
-            { value: 'ecommerce', text: 'E-Commerce', icon: '🛒' },
-            { value: 'portfolio', text: 'Portfolio', icon: '🎨' },
-            { value: 'business', text: 'Business', icon: '💼' },
-            { value: 'news', text: 'News/Magazine', icon: '📰' },
-            { value: 'entertainment', text: 'Entertainment', icon: '🎬' },
-            { value: 'education', text: 'Educational', icon: '📚' },
-            { value: 'social', text: 'Social Media', icon: '🌐' },
-            { value: 'other', text: 'Other', icon: '❓' }
-        ];
+    // Word counters
+    ['description','targetAudience','monetizationDetails'].forEach(id=>{
+        const el=document.getElementById(id);
+        const counter=document.getElementById('wc-'+id);
+        if(el&&counter) el.addEventListener('input',()=>{counter.textContent=el.value.trim().split(/\s+/).filter(w=>w.length).length;});
+    });
 
-        categories.forEach(category => {
-            const card = document.createElement('div');
-            card.className = 'category-card';
-            card.dataset.value = category.value;
-            card.innerHTML = `
-                <div class="category-icon">${category.icon}</div>
-                <div>${category.text}</div>
-            `;
-            
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                categorySelect.value = category.value;
-                validateField(categorySelect);
-            });
-            
-            container.appendChild(card);
-        });
-    }
-
-    // File upload functionality
-    function initializeFileUpload() {
-        const fileInput = document.getElementById('files');
-        const fileUpload = document.querySelector('.file-upload');
-        const fileList = document.querySelector('.file-list');
-
-        // Drag and drop handlers
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, () => fileUpload.classList.add('dragover'), false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, () => fileUpload.classList.remove('dragover'), false);
-        });
-
-        fileUpload.addEventListener('drop', handleDrop, false);
-        fileInput.addEventListener('change', handleFileSelect, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-
-        function handleFileSelect(e) {
-            const files = e.target.files;
-            handleFiles(files);
-        }
-
-        function handleFiles(files) {
-            [...files].forEach(processFile);
-            updateSummary();
-        }
-
-        function processFile(file) {
-            if (!validateFile(file)) return;
-
-            const fileId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-            selectedFiles.set(fileId, file);
-
-            const fileItem = createFileItem(fileId, file);
-            fileList.appendChild(fileItem);
-        }
-
-        function validateFile(file) {
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            const allowedTypes = [
-                'application/pdf',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'image/png',
-                'image/jpeg',
-                'image/jpg',
-                'text/html',
-                'text/css',
-                'text/javascript',
-                'application/javascript'
-            ];
-
-            if (file.size > maxSize) {
-                showNotification(`File "${file.name}" is too large. Maximum size is 10MB.`, 'error');
-                return false;
-            }
-
-            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(html|css|js)$/i)) {
-                showNotification(`File type "${file.type}" is not supported.`, 'error');
-                return false;
-            }
-
-            return true;
-        }
-
-        function createFileItem(fileId, file) {
+    // File upload
+    const fileZone = document.getElementById('fileZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    ['dragenter','dragover'].forEach(e=>fileZone.addEventListener(e,ev=>{ev.preventDefault();fileZone.classList.add('dragover');}));
+    ['dragleave','drop'].forEach(e=>fileZone.addEventListener(e,ev=>{ev.preventDefault();fileZone.classList.remove('dragover');}));
+    fileZone.addEventListener('drop',e=>{handleFiles(e.dataTransfer.files);});
+    fileInput.addEventListener('change',e=>{handleFiles(e.target.files);});
+    function handleFiles(files){
+        [...files].forEach(f=>{
+            if(f.size>10*1024*1024){showNotif(`"${f.name}" exceeds 10MB limit.`,'error');return;}
+            const id = Date.now()+Math.random();
+            selectedFiles.set(id,f);
             const item = document.createElement('div');
-            item.className = 'file-item';
-            item.dataset.fileId = fileId;
-
-            const icon = getFileIcon(file.type, file.name);
-            const size = formatFileSize(file.size);
-
-            item.innerHTML = `
-                <div class="file-icon">${icon}</div>
-                <div class="file-info">
-                    <div class="file-name">${file.name}</div>
-                    <div class="file-size">${size}</div>
-                </div>
-                <button type="button" class="file-remove" title="Remove file">×</button>
-            `;
-
-            item.querySelector('.file-remove').addEventListener('click', function() {
-                selectedFiles.delete(fileId);
-                item.remove();
-                updateSummary();
-            });
-
-            return item;
-        }
-
-        function getFileIcon(type, name) {
-            if (type.includes('pdf')) return '📄';
-            if (type.includes('image')) return '🖼️';
-            if (type.includes('word') || name.endsWith('.doc') || name.endsWith('.docx')) return '📝';
-            if (name.endsWith('.html')) return '🌐';
-            if (name.endsWith('.css')) return '🎨';
-            if (name.endsWith('.js')) return '📜';
-            return '📎';
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-    }
-
-    // Word counters for textareas
-    function initializeWordCounters() {
-        const textareas = document.querySelectorAll('textarea');
-        textareas.forEach(textarea => {
-            const counter = textarea.parentElement.querySelector('.word-counter');
-            if (counter) {
-                textarea.addEventListener('input', function() {
-                    const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
-                    counter.textContent = `${words.length} words`;
-                });
-            }
+            item.className='file-item'; item.dataset.id=id;
+            item.innerHTML=`<span class="fi-icon">${fileIcon(f)}</span><div class="fi-info"><div class="fi-name" title="${f.name}">${f.name}</div><div class="fi-size">${fmtSize(f.size)}</div></div><button type="button" class="fi-remove" title="Remove">×</button>`;
+            item.querySelector('.fi-remove').addEventListener('click',()=>{selectedFiles.delete(id);item.remove();});
+            fileList.appendChild(item);
         });
     }
-
-    // Form validation
-    function initializeFormValidation() {
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => validateField(input));
-            input.addEventListener('input', () => clearFieldError(input));
-        });
-
-        termsCheckbox.addEventListener('change', function() {
-            submitButton.disabled = !this.checked;
-        });
-    }
-
-    function validateField(field) {
-        clearFieldError(field);
-        
-        if (field.hasAttribute('required') && !field.value.trim()) {
-            showFieldError(field, 'This field is required.');
-            return false;
-        }
-
-        if (field.type === 'email' && field.value.trim()) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(field.value.trim())) {
-                showFieldError(field, 'Please enter a valid email address.');
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    function showFieldError(field, message) {
-        field.classList.add('error');
-        const existingError = field.parentElement.querySelector('.error-message');
-        if (existingError) existingError.remove();
-
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = message;
-        errorDiv.style.color = '#ff5252';
-        errorDiv.style.fontSize = '0.8rem';
-        errorDiv.style.marginTop = '0.25rem';
-        
-        field.parentElement.appendChild(errorDiv);
-    }
-
-    function clearFieldError(field) {
-        field.classList.remove('error');
-        const errorMessage = field.parentElement.querySelector('.error-message');
-        if (errorMessage) errorMessage.remove();
-    }
-
-    function validateStep(step) {
-        const section = document.querySelector(`[data-step="${step}"]`);
-        const requiredFields = section.querySelectorAll('[required]');
-        let isValid = true;
-
-        requiredFields.forEach(field => {
-            if (!validateField(field)) {
-                isValid = false;
-            }
-        });
-
-        return isValid;
-    }
+    function fileIcon(f){if(f.type.includes('pdf'))return'📄';if(f.type.includes('image'))return'🖼️';if(f.name.endsWith('.html'))return'🌐';if(f.name.endsWith('.css'))return'🎨';if(f.name.endsWith('.js'))return'📜';return'📎';}
+    function fmtSize(b){const k=1024;const s=['B','KB','MB'];const i=Math.floor(Math.log(b)/Math.log(k));return(b/Math.pow(k,i)).toFixed(1)+' '+s[i];}
 
     // Navigation
-    function initializeNavigation() {
-        nextButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (validateStep(currentStep)) {
-                    goToStep(currentStep + 1);
-                }
-            });
-        });
-
-        prevButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                goToStep(currentStep - 1);
-            });
-        });
-    }
-
-    function goToStep(step) {
-        if (step < 1 || step > totalSteps) return;
-
-        steps.forEach(s => s.classList.remove('active', 'completed'));
-        for (let i = 1; i <= step; i++) {
-            const stepEl = document.querySelector(`[data-step="${i}"]`);
-            if (stepEl.classList.contains('step')) {
-                stepEl.classList.add(i === step ? 'active' : 'completed');
-            }
-        }
-
-        progressBar.style.width = `${(step / totalSteps) * 100}%`;
-
-        sections.forEach(section => {
-            section.classList.remove('active');
-            if (parseInt(section.dataset.step) === step) {
-                setTimeout(() => section.classList.add('active'), 150);
-            }
-        });
-
-        currentStep = step;
-
-        if (step === 5) {
-            updateSummary();
-        }
-    }
-
-    // Summary update
-    function updateSummary() {
-        const summaryFields = {
-            'summary-name': 'name',
-            'summary-email': 'email',
-            'summary-phone': 'phone',
-            'summary-websiteName': 'websiteName',
-            'summary-description': 'description',
-            'summary-targetAudience': 'targetAudience',
-            'summary-monetizationDetails': 'monetizationDetails',
-            'summary-referenceLinks': 'referenceLinks'
-        };
-
-        Object.entries(summaryFields).forEach(([summaryId, fieldName]) => {
-            const summaryEl = document.getElementById(summaryId);
-            const fieldEl = document.getElementById(fieldName);
-            if (summaryEl && fieldEl) {
-                summaryEl.textContent = fieldEl.value.trim() || 'N/A';
-            }
-        });
-
-        const categoryEl = document.getElementById('category');
-        const categorySummary = document.getElementById('summary-category');
-        if (categoryEl && categorySummary) {
-            const selectedOption = categoryEl.options[categoryEl.selectedIndex];
-            categorySummary.textContent = selectedOption ? selectedOption.text : 'N/A';
-        }
-
-        const monetizationEl = document.getElementById('monetization');
-        const monetizationSummary = document.getElementById('summary-monetization');
-        if (monetizationEl && monetizationSummary) {
-            const selectedOption = monetizationEl.options[monetizationEl.selectedIndex];
-            monetizationSummary.textContent = selectedOption ? selectedOption.text : 'N/A';
-        }
-
-        const filesSummary = document.getElementById('summary-files');
-        if (filesSummary) {
-            const fileNames = Array.from(selectedFiles.values()).map(file => file.name);
-            filesSummary.textContent = fileNames.length > 0 ? fileNames.join(', ') : 'None';
-        }
-    }
-
-    // Form submission with real API
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        if (!validateStep(currentStep)) {
-            showNotification('Please fill out all required fields correctly.', 'error');
-            return;
-        }
-
-        if (!termsCheckbox.checked) {
-            showNotification('Please agree to the terms and conditions.', 'error');
-            return;
-        }
-
-        submitButton.disabled = true;
-        const originalText = submitButton.textContent;
-        submitButton.innerHTML = '<span class="loading"></span>Submitting...';
-
-        try {
-            const formData = new FormData(form);
-
-            selectedFiles.forEach(file => {
-                formData.append('files[]', file);
-            });
-
-            const response = await fetch('http://localhost:5000/api/submityouridea', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            document.querySelector('[data-step="5"]').classList.remove('active');
-            document.querySelector('[data-step="success"]').style.display = 'block';
-            document.querySelector('[data-step="success"]').classList.add('active');
-            showNotification('Your website idea has been submitted successfully!', 'success');
-
-        } catch (error) {
-            showNotification(error.message || 'Failed to submit your idea. Please try again.', 'error');
-            console.error('Submission error:', error);
-        } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
-        }
+    document.querySelectorAll('.btn-next[data-next]').forEach(btn=>{
+        btn.addEventListener('click',()=>{if(validate(currentStep))goTo(parseInt(btn.dataset.next));});
+    });
+    document.querySelectorAll('.btn-prev[data-prev]').forEach(btn=>{
+        btn.addEventListener('click',()=>goTo(parseInt(btn.dataset.prev)));
     });
 
-    // Notification system
-    function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => notification.classList.add('show'), 100);
-        
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }, 4000);
+    function goTo(step){
+        document.querySelector(`.form-section[data-step="${currentStep}"]`).classList.remove('active');
+        currentStep=step;
+        const next=document.querySelector(`.form-section[data-step="${currentStep}"]`);
+        next.classList.remove('active'); void next.offsetWidth; next.classList.add('active');
+        updateProgress();
+        if(step===5) updateSummary();
+        window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    // Reset form function
-    function resetForm() {
-        form.reset();
+    function updateProgress(){
+        document.getElementById('progressFill').style.width=(currentStep/STEPS*100)+'%';
+        document.querySelectorAll('.step-pill').forEach(p=>{
+            const s=parseInt(p.dataset.step);
+            p.classList.remove('active','done');
+            if(s===currentStep) p.classList.add('active');
+            else if(s<currentStep) p.classList.add('done');
+        });
+    }
+
+    // Validation
+    function validate(step){
+        let valid=true;
+        const section=document.querySelector(`.form-section[data-step="${step}"]`);
+        section.querySelectorAll('[required]').forEach(f=>{
+            clearErr(f);
+            if(!f.value.trim()){showErr(f,document.getElementById('err-'+f.id));valid=false;}
+            else if(f.type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim())){showErr(f,document.getElementById('err-'+f.id));valid=false;}
+        });
+        if(step===2&&!categorySelect.value){
+            const errEl=document.getElementById('err-category');
+            if(errEl){errEl.style.display='block';}valid=false;
+        }
+        if(!valid) showNotif('Please complete all required fields.','error');
+        return valid;
+    }
+    function showErr(field,errEl){field.classList.add('err');if(errEl)errEl.style.display='block';}
+    function clearErr(field){field.classList.remove('err');const e=document.getElementById('err-'+field.id);if(e)e.style.display='none';}
+    document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',()=>clearErr(el)));
+
+    // Terms checkbox
+    document.getElementById('terms').addEventListener('change',function(){
+        document.getElementById('submitBtn').disabled=!this.checked;
+    });
+
+    // Summary
+    function updateSummary(){
+        const fields=['name','email','phone','websiteName','description','targetAudience','monetizationDetails','referenceLinks'];
+        fields.forEach(id=>{
+            const el=document.getElementById(id);
+            const s=document.getElementById('s-'+id);
+            if(el&&s) s.textContent=el.value.trim()||'—';
+        });
+        const catEl=document.getElementById('category');
+        document.getElementById('s-category').textContent=catEl.options[catEl.selectedIndex]?.text||'—';
+        const monEl=document.getElementById('monetization');
+        document.getElementById('s-monetization').textContent=monEl.options[monEl.selectedIndex]?.text||'—';
+        const names=[...selectedFiles.values()].map(f=>f.name);
+        document.getElementById('s-files').textContent=names.length?names.join(', '):'None';
+    }
+
+    // Form submit
+    document.getElementById('ideaForm').addEventListener('submit',async function(e){
+        e.preventDefault();
+        if(!validate(currentStep)) return;
+        const btn=document.getElementById('submitBtn');
+        btn.textContent='Submitting...'; btn.disabled=true;
+
+        // Simulate submission (replace with real API call when backend is ready)
+        await new Promise(r=>setTimeout(r,1500));
+
+        // Show success
+        document.getElementById('ideaForm').style.display='none';
+        const ss=document.getElementById('successScreen');
+        ss.classList.add('active');
+        document.getElementById('subId').textContent='CVX-'+Date.now().toString(36).toUpperCase();
+        showNotif('Idea submitted successfully!','success');
+    });
+
+    // Notification
+    function showNotif(msg,type){
+        const n=document.getElementById('notifEl');
+        n.textContent=msg; n.className='notif '+type;
+        setTimeout(()=>n.classList.add('show'),50);
+        setTimeout(()=>{n.classList.remove('show');},4500);
+    }
+
+    // Reset
+    function resetForm(){
+        document.getElementById('ideaForm').reset();
+        document.getElementById('ideaForm').style.display='';
+        document.getElementById('successScreen').classList.remove('active');
         selectedFiles.clear();
-        document.querySelector('.file-list').innerHTML = '';
-        document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
-        document.querySelectorAll('.error').forEach(field => clearFieldError(field));
-        
-        currentStep = 1;
-        goToStep(1);
-        
-        document.querySelector('[data-step="success"]').style.display = 'none';
-        document.querySelector('[data-step="success"]').classList.remove('active');
-        
-        submitButton.disabled = true;
-        termsCheckbox.checked = false;
-        
-        updateSummary();
+        fileList.innerHTML='';
+        catGrid.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
+        document.getElementById('submitBtn').disabled=true;
+        document.getElementById('terms').checked=false;
+        ['description','targetAudience','monetizationDetails'].forEach(id=>{
+            const c=document.getElementById('wc-'+id);if(c)c.textContent='0';
+        });
+        goTo(1);
     }
+    window.resetForm=resetForm;
 
-    window.resetForm = resetForm;
-</script>
-
+    // Init progress
+    updateProgress();
+    </script>
 </body>
 </html>
