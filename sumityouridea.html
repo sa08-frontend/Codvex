@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Idea | Ree Force</title>
+    <style>
+        :root {
+            --primary-dark: #121212;
+            --secondary-dark: #1e1e1e;
+            --text-dark: #ffffff;
+            --accent-dark: #00c853;
+            --gradient-dark: linear-gradient(135deg, #00c853, #18ffff);
+            --primary-light: #f5f5f5;
+            --secondary-light: #ffffff;
+            --text-light: #121212;
+            --accent-light: #00a045;
+            --gradient-light: linear-gradient(135deg, #18ffff, #00c853);
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --text: var(--text-dark);
+            --accent: var(--accent-dark);
+            --gradient: var(--gradient-dark);
+            --transition: all 0.3s ease;
+        }
+
+        .light-theme {
+            --primary: var(--primary-light);
+            --secondary: var(--secondary-light);
+            --text: var(--text-light);
+            --accent: var(--accent-light);
+            --gradient: var(--gradient-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: var(--transition);
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(18, 18, 18, 0.9);
+        }
+
+        .light-theme header {
+            background-color: rgba(245, 245, 245, 0.9);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0, 200, 83, 0.1);
+        }
+
+        .submit-form-container {
+            padding: 10rem 5% 5rem;
+            min-height: 100vh;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .form-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            height: 8px;
+            background-color: var(--secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 20%;
+            background: var(--gradient);
+            transition: width 0.5s ease;
+        }
+
+        .step-indicators {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            border: 2px solid var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--gradient);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-number {
+            background: var(--accent);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .form-card {
+            background-color: var(--secondary);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .light-theme .form-card {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .form-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-section h2 {
+            margin-bottom: 2rem;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid transparent;
+            background-color: var(--primary);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+        }
+
+        input.error,
+        textarea.error,
+        select.error {
+            border-color: #ff5252;
+            box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .word-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            opacity: 0.7;
+        }
+
+        .enhanced-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .category-card {
+            padding: 1.5rem 1rem;
+            background-color: var(--primary);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .category-card.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 2rem;
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            background-color: rgba(0, 200, 83, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background-color: rgba(0, 200, 83, 0.1);
+        }
+
+        .file-upload.dragover {
+            background-color: rgba(0, 200, 83, 0.15);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .file-upload input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .file-list {
+            margin-top: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: rgba(0, 200, 83, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 5px;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background-color: rgba(0, 200, 83, 0.1);
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .file-info {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: #ff5252;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-remove:hover {
+            background-color: rgba(255, 82, 82, 0.1);
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .summary-section {
+            background-color: var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(0, 200, 83, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .summary-item {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .summary-item strong {
+            color: var(--text);
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .success-message h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: #fff;
+            max-width: 400px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background-color: #ff5252;
+        }
+
+        .notification.success {
+            background-color: var(--accent);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .form-header h1 {
+                font-size: 2rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .form-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .enhanced-categories {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .step-indicators {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+
+            .step {
+                min-width: 100px;
+                flex-shrink: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">
+            <div class="logo-icon">⚡</div>
+            Ree Force
+        </a>
+        <button class="theme-toggle">🌓</button>
+    </header>
+
+    <div class="submit-form-container">
+        <div class="form-header">
+            <h1>Submit Your Website Idea</h1>
+            <p>Share your website concept with us, and our team will evaluate it. If approved, we'll build and deploy your website completely free of charge through our revenue-sharing model.</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="step-indicators">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Basic Info</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Website Details</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Audience & Revenue</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">Files & References</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-number">5</div>
+                <div class="step-label">Review & Submit</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+           <form id="websiteIdeaForm" action="http://localhost:5000/api/submityouridea" method="post" enctype="multipart/form-data">
+                <!-- Step 1: Basic Information -->
+                <div class="form-section active" data-step="1">
+                    <h2>Basic Information</h2>
+                    <div class="form-group">
+                        <label for="name" class="required">Your Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="required">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    <div class="form-buttons">
+                        <div></div>
+                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Website Details -->
+                <div class="form-section" data-step="2">
+                    <h2>Website Details</h2>
+                    <div class="form-group">
+                        <label for="websiteName" class="required">Website Name</label>
+                        <input type="text" id="websiteName" name="websiteName" required placeholder="Enter your website name">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Website Category</label>
+                        <select id="category" name="category" required style="display: none;">
+                            <option value="">Select a category</option>
+                            <option value="blog">Blog</option>
+                            <option value="ecommerce">E-Commerce</option>
+                            <option value="portfolio">Portfolio</option>
+                            <option value="business">Business</option>
+                            <option value="news">News/Magazine</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Educational</option>
+                            <option value="social">Social Media</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="enhanced-categories"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="required">Website Description</label>
+                        <textarea id="description" name="description" required placeholder="Describe your website idea in detail. What is it about? What features would you like it to have?"></textarea>
+                        <div class="word-counter">0 words</div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Audience & Monetization -->
+                <div class="form-section" data-step="3">
+                    <h2>Audience & Revenue</h2>
+                    <div class="form-group">
+                        <label for="targetAudience" class="required">Target Audience</label>
+                        <textarea id="targetAudience" name="targetAudience" required placeholder="Describe your target audience (age group, interests, demographics, etc.)"></textarea>
+                        <div class="word-counter">0 words</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="monetization" class="required">Monetization Strategy</label>
+                        <select id="monetization" name="monetization" required>
+                            <option value="">Select a monetization strategy</option>
+                            <option value="ads">Advertisements</option>
+                            <option value="subscriptions">Subscriptions</option>
+                            <option value="ecommerce">Product Sales</option>
+                            <option value="affiliate">Affiliate Marketing</option>
+                            <option value="donations">Donations</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="monetizationDetails">Monetization Details</label>
+                        <textarea id="monetizationDetails" name="monetizationDetails" placeholder="Provide more details about your monetization plan"></textarea>
+                        <div class="word-counter">0 words</div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Files & References -->
+                <div class="form-section" data-step="4">
+                    <h2>References & Supporting Files</h2>
+                    <div class="form-group">
+                        <label for="referenceLinks">Reference Links</label>
+                        <textarea id="referenceLinks" name="referenceLinks" placeholder="Enter URLs or references that inspire your idea (one per line)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Supporting Files</label>
+                        <div class="file-upload">
+                            <input type="file" id="files" name="files[]" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.html,.css,.js">
+                            <div class="upload-icon">📁</div>
+                            <p><strong>Drag & drop files here or click to upload</strong><br>
+                            Supported: PDF, DOC, PNG, JPG, HTML, CSS, JS (Max 10MB each)</p>
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                        <button type="button" class="btn btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Review & Submit -->
+                <div class="form-section" data-step="5">
+                    <h2>Review & Submit</h2>
+                    <div class="summary-section">
+                        <h3>Basic Information</h3>
+                        <div class="summary-item"><strong>Name:</strong> <span id="summary-name">N/A</span></div>
+                        <div class="summary-item"><strong>Email:</strong> <span id="summary-email">N/A</span></div>
+                        <div class="summary-item"><strong>Phone:</strong> <span id="summary-phone">N/A</span></div>
+                    </div>
+                    <div class="summary-section">
+                        <h3>Website Details</h3>
+                        <div class="summary-item"><strong>Website Name:</strong> <span id="summary-websiteName">N/A</span></div>
+                        <div class="summary-item"><strong>Category:</strong> <span id="summary-category">N/A</span></div>
+                        <div class="summary-item"><strong>Description:</strong> <span id="summary-description">N/A</span></div>
+                    </div>
+                    <div class="summary-section">
+                        <h3>Audience & Revenue</h3>
+                        <div class="summary-item"><strong>Target Audience:</strong> <span id="summary-targetAudience">N/A</span></div>
+                        <div class="summary-item"><strong>Monetization:</strong> <span id="summary-monetization">N/A</span></div>
+                        <div class="summary-item"><strong>Monetization Details:</strong> <span id="summary-monetizationDetails">N/A</span></div>
+                    </div>
+                    <div class="summary-section">
+                        <h3>References & Files</h3>
+                        <div class="summary-item"><strong>Reference Links:</strong> <span id="summary-referenceLinks">None</span></div>
+                        <div class="summary-item"><strong>Uploaded Files:</strong> <span id="summary-files">None</span></div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms" class="checkbox-label">I agree to the Terms and Conditions and understand the revenue-sharing model (80% to me, 20% to Ree Force).</label>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                        <button type="submit" class="btn btn-primary submit-btn" disabled>Submit Idea</button>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div class="form-section success-message" data-step="success" style="display: none;">
+                    <div class="success-icon">✅</div>
+                    <h2>Submission Successful!</h2>
+                    <p>Thank you for submitting your website idea. We'll review it and get back to you within 5-7 business days.</p>
+                    <button type="button" class="btn btn-primary" onclick="resetForm()">Submit Another Idea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   <script>
+    // Application state
+    let currentStep = 1;
+    let selectedFiles = new Map();
+    const totalSteps = 5;
+
+    // DOM elements
+    const form = document.getElementById('websiteIdeaForm');
+    const progressBar = document.querySelector('.progress-bar');
+    const steps = document.querySelectorAll('.step');
+    const sections = document.querySelectorAll('.form-section');
+    const nextButtons = document.querySelectorAll('.next-btn');
+    const prevButtons = document.querySelectorAll('.prev-btn');
+    const submitButton = document.querySelector('.submit-btn');
+    const termsCheckbox = document.getElementById('terms');
+
+    // Initialize the form
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTheme();
+        initializeCategoryCards();
+        initializeFileUpload();
+        initializeWordCounters();
+        initializeFormValidation();
+        initializeNavigation();
+        updateSummary();
+    });
+
+    // Theme management
+    function initializeTheme() {
+        const themeToggle = document.querySelector('.theme-toggle');
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeToggle.textContent = '🌙';
+        }
+
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            themeToggle.textContent = isLight ? '🌙' : '🌓';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    }
+
+    // Category cards initialization
+    function initializeCategoryCards() {
+        const categorySelect = document.getElementById('category');
+        const container = document.querySelector('.enhanced-categories');
+        const categories = [
+            { value: 'blog', text: 'Blog', icon: '📝' },
+            { value: 'ecommerce', text: 'E-Commerce', icon: '🛒' },
+            { value: 'portfolio', text: 'Portfolio', icon: '🎨' },
+            { value: 'business', text: 'Business', icon: '💼' },
+            { value: 'news', text: 'News/Magazine', icon: '📰' },
+            { value: 'entertainment', text: 'Entertainment', icon: '🎬' },
+            { value: 'education', text: 'Educational', icon: '📚' },
+            { value: 'social', text: 'Social Media', icon: '🌐' },
+            { value: 'other', text: 'Other', icon: '❓' }
+        ];
+
+        categories.forEach(category => {
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.dataset.value = category.value;
+            card.innerHTML = `
+                <div class="category-icon">${category.icon}</div>
+                <div>${category.text}</div>
+            `;
+            
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                categorySelect.value = category.value;
+                validateField(categorySelect);
+            });
+            
+            container.appendChild(card);
+        });
+    }
+
+    // File upload functionality
+    function initializeFileUpload() {
+        const fileInput = document.getElementById('files');
+        const fileUpload = document.querySelector('.file-upload');
+        const fileList = document.querySelector('.file-list');
+
+        // Drag and drop handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUpload.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUpload.addEventListener(eventName, () => fileUpload.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUpload.addEventListener(eventName, () => fileUpload.classList.remove('dragover'), false);
+        });
+
+        fileUpload.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            [...files].forEach(processFile);
+            updateSummary();
+        }
+
+        function processFile(file) {
+            if (!validateFile(file)) return;
+
+            const fileId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            selectedFiles.set(fileId, file);
+
+            const fileItem = createFileItem(fileId, file);
+            fileList.appendChild(fileItem);
+        }
+
+        function validateFile(file) {
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'image/png',
+                'image/jpeg',
+                'image/jpg',
+                'text/html',
+                'text/css',
+                'text/javascript',
+                'application/javascript'
+            ];
+
+            if (file.size > maxSize) {
+                showNotification(`File "${file.name}" is too large. Maximum size is 10MB.`, 'error');
+                return false;
+            }
+
+            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(html|css|js)$/i)) {
+                showNotification(`File type "${file.type}" is not supported.`, 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function createFileItem(fileId, file) {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.dataset.fileId = fileId;
+
+            const icon = getFileIcon(file.type, file.name);
+            const size = formatFileSize(file.size);
+
+            item.innerHTML = `
+                <div class="file-icon">${icon}</div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${size}</div>
+                </div>
+                <button type="button" class="file-remove" title="Remove file">×</button>
+            `;
+
+            item.querySelector('.file-remove').addEventListener('click', function() {
+                selectedFiles.delete(fileId);
+                item.remove();
+                updateSummary();
+            });
+
+            return item;
+        }
+
+        function getFileIcon(type, name) {
+            if (type.includes('pdf')) return '📄';
+            if (type.includes('image')) return '🖼️';
+            if (type.includes('word') || name.endsWith('.doc') || name.endsWith('.docx')) return '📝';
+            if (name.endsWith('.html')) return '🌐';
+            if (name.endsWith('.css')) return '🎨';
+            if (name.endsWith('.js')) return '📜';
+            return '📎';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+    }
+
+    // Word counters for textareas
+    function initializeWordCounters() {
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            const counter = textarea.parentElement.querySelector('.word-counter');
+            if (counter) {
+                textarea.addEventListener('input', function() {
+                    const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                    counter.textContent = `${words.length} words`;
+                });
+            }
+        });
+    }
+
+    // Form validation
+    function initializeFormValidation() {
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => validateField(input));
+            input.addEventListener('input', () => clearFieldError(input));
+        });
+
+        termsCheckbox.addEventListener('change', function() {
+            submitButton.disabled = !this.checked;
+        });
+    }
+
+    function validateField(field) {
+        clearFieldError(field);
+        
+        if (field.hasAttribute('required') && !field.value.trim()) {
+            showFieldError(field, 'This field is required.');
+            return false;
+        }
+
+        if (field.type === 'email' && field.value.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(field.value.trim())) {
+                showFieldError(field, 'Please enter a valid email address.');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function showFieldError(field, message) {
+        field.classList.add('error');
+        const existingError = field.parentElement.querySelector('.error-message');
+        if (existingError) existingError.remove();
+
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorDiv.style.color = '#ff5252';
+        errorDiv.style.fontSize = '0.8rem';
+        errorDiv.style.marginTop = '0.25rem';
+        
+        field.parentElement.appendChild(errorDiv);
+    }
+
+    function clearFieldError(field) {
+        field.classList.remove('error');
+        const errorMessage = field.parentElement.querySelector('.error-message');
+        if (errorMessage) errorMessage.remove();
+    }
+
+    function validateStep(step) {
+        const section = document.querySelector(`[data-step="${step}"]`);
+        const requiredFields = section.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // Navigation
+    function initializeNavigation() {
+        nextButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (validateStep(currentStep)) {
+                    goToStep(currentStep + 1);
+                }
+            });
+        });
+
+        prevButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                goToStep(currentStep - 1);
+            });
+        });
+    }
+
+    function goToStep(step) {
+        if (step < 1 || step > totalSteps) return;
+
+        steps.forEach(s => s.classList.remove('active', 'completed'));
+        for (let i = 1; i <= step; i++) {
+            const stepEl = document.querySelector(`[data-step="${i}"]`);
+            if (stepEl.classList.contains('step')) {
+                stepEl.classList.add(i === step ? 'active' : 'completed');
+            }
+        }
+
+        progressBar.style.width = `${(step / totalSteps) * 100}%`;
+
+        sections.forEach(section => {
+            section.classList.remove('active');
+            if (parseInt(section.dataset.step) === step) {
+                setTimeout(() => section.classList.add('active'), 150);
+            }
+        });
+
+        currentStep = step;
+
+        if (step === 5) {
+            updateSummary();
+        }
+    }
+
+    // Summary update
+    function updateSummary() {
+        const summaryFields = {
+            'summary-name': 'name',
+            'summary-email': 'email',
+            'summary-phone': 'phone',
+            'summary-websiteName': 'websiteName',
+            'summary-description': 'description',
+            'summary-targetAudience': 'targetAudience',
+            'summary-monetizationDetails': 'monetizationDetails',
+            'summary-referenceLinks': 'referenceLinks'
+        };
+
+        Object.entries(summaryFields).forEach(([summaryId, fieldName]) => {
+            const summaryEl = document.getElementById(summaryId);
+            const fieldEl = document.getElementById(fieldName);
+            if (summaryEl && fieldEl) {
+                summaryEl.textContent = fieldEl.value.trim() || 'N/A';
+            }
+        });
+
+        const categoryEl = document.getElementById('category');
+        const categorySummary = document.getElementById('summary-category');
+        if (categoryEl && categorySummary) {
+            const selectedOption = categoryEl.options[categoryEl.selectedIndex];
+            categorySummary.textContent = selectedOption ? selectedOption.text : 'N/A';
+        }
+
+        const monetizationEl = document.getElementById('monetization');
+        const monetizationSummary = document.getElementById('summary-monetization');
+        if (monetizationEl && monetizationSummary) {
+            const selectedOption = monetizationEl.options[monetizationEl.selectedIndex];
+            monetizationSummary.textContent = selectedOption ? selectedOption.text : 'N/A';
+        }
+
+        const filesSummary = document.getElementById('summary-files');
+        if (filesSummary) {
+            const fileNames = Array.from(selectedFiles.values()).map(file => file.name);
+            filesSummary.textContent = fileNames.length > 0 ? fileNames.join(', ') : 'None';
+        }
+    }
+
+    // Form submission with real API
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!validateStep(currentStep)) {
+            showNotification('Please fill out all required fields correctly.', 'error');
+            return;
+        }
+
+        if (!termsCheckbox.checked) {
+            showNotification('Please agree to the terms and conditions.', 'error');
+            return;
+        }
+
+        submitButton.disabled = true;
+        const originalText = submitButton.textContent;
+        submitButton.innerHTML = '<span class="loading"></span>Submitting...';
+
+        try {
+            const formData = new FormData(form);
+
+            selectedFiles.forEach(file => {
+                formData.append('files[]', file);
+            });
+
+            const response = await fetch('http://localhost:5000/api/submityouridea', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            document.querySelector('[data-step="5"]').classList.remove('active');
+            document.querySelector('[data-step="success"]').style.display = 'block';
+            document.querySelector('[data-step="success"]').classList.add('active');
+            showNotification('Your website idea has been submitted successfully!', 'success');
+
+        } catch (error) {
+            showNotification(error.message || 'Failed to submit your idea. Please try again.', 'error');
+            console.error('Submission error:', error);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        }
+    });
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => notification.classList.add('show'), 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+
+    // Reset form function
+    function resetForm() {
+        form.reset();
+        selectedFiles.clear();
+        document.querySelector('.file-list').innerHTML = '';
+        document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
+        document.querySelectorAll('.error').forEach(field => clearFieldError(field));
+        
+        currentStep = 1;
+        goToStep(1);
+        
+        document.querySelector('[data-step="success"]').style.display = 'none';
+        document.querySelector('[data-step="success"]').classList.remove('active');
+        
+        submitButton.disabled = true;
+        termsCheckbox.checked = false;
+        
+        updateSummary();
+    }
+
+    window.resetForm = resetForm;
+</script>
+
+</body>
+</html>
