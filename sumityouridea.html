@@ -4,595 +4,1117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Your Idea | Codvex</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
     <style>
+        /* ── DESIGN TOKENS ── */
         :root {
-            --accent: #7c5cfc;
-            --accent2: #00e5c8;
-            --gradient: linear-gradient(135deg, #7c5cfc, #00e5c8);
-            --gradient-text: linear-gradient(90deg, #7c5cfc, #00e5c8);
-            --bg: #0a0a0f;
-            --surface: #111118;
-            --card: #16161f;
-            --text: #f0f0ff;
-            --muted: #9090aa;
-            --border: rgba(124,92,252,0.2);
-            --error: #fc6b6b;
-            --success: #00e5c8;
-        }
-        .light-theme {
-            --bg: #f5f4ff; --surface: #eeedf8; --card: #ffffff;
-            --text: #0d0b1e; --muted: #5a5575; --border: rgba(124,92,252,0.25);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; transition:background 0.4s,color 0.4s; }
-        h1,h2,h3,.logo-text { font-family:'Syne',sans-serif; }
+            --accent:       #7c5cfc;
+            --accent2:      #00e5c8;
+            --accent3:      #ff6b6b;
+            --grad:         linear-gradient(135deg, #7c5cfc 0%, #00e5c8 100%);
+            --grad-text:    linear-gradient(90deg,  #7c5cfc,  #00e5c8);
+            --grad-warm:    linear-gradient(135deg, #ff6b6b,  #ffd166);
 
-        header {
-            padding:1.2rem 5%; display:flex; justify-content:space-between; align-items:center;
-            position:fixed; width:100%; z-index:100; backdrop-filter:blur(16px);
-            background:rgba(10,10,15,0.82); border-bottom:1px solid var(--border);
+            --bg:       #08080f;
+            --surface:  #0f0f1a;
+            --card:     #13131f;
+            --card2:    #1a1a2e;
+            --text:     #eeeeff;
+            --muted:    #8888aa;
+            --border:   rgba(124,92,252,0.18);
+            --border2:  rgba(124,92,252,0.35);
+            --err:      #ff6b6b;
+            --success:  #00e5c8;
+
+            --r-sm: 10px;
+            --r-md: 16px;
+            --r-lg: 22px;
+            --r-xl: 30px;
+
+            --shadow-glow: 0 0 40px rgba(124,92,252,0.15);
+            --shadow-card: 0 20px 60px rgba(0,0,0,0.5);
+            --trans: all 0.28s cubic-bezier(0.4,0,0.2,1);
         }
-        .light-theme header { background:rgba(245,244,255,0.88); }
-        .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-        .logo-mark {
-            width:34px; height:34px; border-radius:9px; background:var(--gradient);
+        .light {
+            --bg:      #f0eeff;
+            --surface: #f8f7ff;
+            --card:    #ffffff;
+            --card2:   #f0eeff;
+            --text:    #0a0818;
+            --muted:   #5a5575;
+            --border:  rgba(124,92,252,0.2);
+            --border2: rgba(124,92,252,0.4);
+            --shadow-glow: 0 0 40px rgba(124,92,252,0.08);
+            --shadow-card: 0 8px 40px rgba(0,0,0,0.1);
+        }
+
+        /* ── RESET & BASE ── */
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{
+            background:var(--bg); color:var(--text);
+            font-family:'DM Sans',sans-serif;
+            min-height:100vh; overflow-x:hidden;
+            transition:background .4s,color .4s;
+        }
+        h1,h2,h3,h4,.logo{font-family:'Syne',sans-serif;}
+
+        /* ── BACKGROUND MESH ── */
+        body::before{
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+            background:
+                radial-gradient(ellipse 70% 50% at 15% 20%, rgba(124,92,252,.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 85% 80%, rgba(0,229,200,.08) 0%, transparent 55%);
+        }
+        .light body::before{
+            background:
+                radial-gradient(ellipse 70% 50% at 15% 20%, rgba(124,92,252,.07) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 85% 80%, rgba(0,229,200,.05) 0%, transparent 55%);
+        }
+
+        /* ── HEADER ── */
+        header{
+            padding:1.1rem 5%; display:flex; justify-content:space-between; align-items:center;
+            position:fixed; width:100%; z-index:200;
+            backdrop-filter:blur(20px) saturate(1.4);
+            background:rgba(8,8,15,.75); border-bottom:1px solid var(--border);
+            transition:background .3s;
+        }
+        .light header{background:rgba(240,238,255,.82);}
+        .logo{
+            display:flex; align-items:center; gap:10px; text-decoration:none;
+        }
+        .logo-mark{
+            width:34px; height:34px; border-radius:9px; background:var(--grad);
             display:flex; align-items:center; justify-content:center; font-size:1rem;
+            box-shadow:0 4px 14px rgba(124,92,252,.4);
         }
-        .logo-text { font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; background:var(--gradient-text); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-        .theme-btn { background:none; border:1px solid var(--border); color:var(--text); width:36px; height:36px; border-radius:9px; cursor:pointer; font-size:0.9rem; }
-
-        .page-wrap { padding:8rem 5% 4rem; max-width:960px; margin:0 auto; }
-        .page-header { text-align:center; margin-bottom:3rem; }
-        .page-label { font-size:0.78rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:0.8rem; }
-        .page-title { font-size:clamp(2rem,4vw,2.8rem); font-weight:800; letter-spacing:-0.03em; margin-bottom:0.8rem; }
-        .page-sub { color:var(--muted); font-size:1rem; line-height:1.65; max-width:580px; margin:0 auto; }
-
-        /* Progress */
-        .progress-wrap { margin-bottom:2.5rem; }
-        .progress-track { height:5px; background:var(--surface); border-radius:99px; overflow:hidden; margin-bottom:1.5rem; }
-        .progress-fill { height:100%; background:var(--gradient); border-radius:99px; width:20%; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
-        .steps { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; }
-        .step-pill {
-            display:flex; align-items:center; gap:8px; padding:6px 16px;
-            border-radius:99px; border:1px solid var(--border); font-size:0.82rem;
-            font-weight:500; color:var(--muted); transition:all 0.3s; cursor:default;
+        .logo-text{
+            font-size:1.45rem; font-weight:800; letter-spacing:-.04em;
+            background:var(--grad-text); -webkit-background-clip:text;
+            background-clip:text; -webkit-text-fill-color:transparent;
         }
-        .step-pill.active { background:var(--gradient); color:white; border-color:transparent; }
-        .step-pill.done { border-color:var(--accent2); color:var(--accent2); }
-        .step-num { font-weight:700; font-family:'Syne',sans-serif; }
-
-        /* Card */
-        .form-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; }
-        .light-theme .form-card { box-shadow:0 10px 40px rgba(0,0,0,0.07); }
-        .section-head { margin-bottom:2rem; }
-        .section-head h2 { font-size:1.6rem; letter-spacing:-0.02em; }
-        .section-head p { color:var(--muted); font-size:0.9rem; margin-top:0.3rem; }
-
-        /* Form elements */
-        .form-section { display:none; animation:fadeUp 0.4s ease forwards; }
-        .form-section.active { display:block; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-
-        .form-group { margin-bottom:1.4rem; }
-        label { display:block; font-size:0.86rem; font-weight:500; color:var(--muted); margin-bottom:0.45rem; }
-        label .req { color:var(--accent); }
-        input[type=text], input[type=email], input[type=tel], textarea, select {
-            width:100%; padding:0.85rem 1rem; background:var(--bg); border:1px solid var(--border);
-            border-radius:10px; color:var(--text); font-size:0.95rem; font-family:'DM Sans',sans-serif;
-            outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+        .header-right{display:flex;align-items:center;gap:.8rem;}
+        .icon-btn{
+            background:none; border:1px solid var(--border); color:var(--text);
+            width:36px; height:36px; border-radius:var(--r-sm); cursor:pointer;
+            font-size:.9rem; display:flex; align-items:center; justify-content:center;
+            transition:var(--trans);
         }
-        .light-theme input, .light-theme textarea, .light-theme select { background:var(--surface); }
-        input:focus, textarea:focus, select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(124,92,252,0.15); }
-        input.err, textarea.err, select.err { border-color:var(--error); box-shadow:0 0 0 3px rgba(252,107,107,0.15); }
-        textarea { min-height:110px; resize:vertical; }
-        select option { background:var(--card); }
-        .err-msg { color:var(--error); font-size:0.78rem; margin-top:0.3rem; display:none; }
-        .word-count { text-align:right; font-size:0.78rem; color:var(--muted); margin-top:0.25rem; }
-
-        /* Category grid */
-        .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.8rem; margin-top:0.5rem; }
-        .cat-card {
-            padding:1.1rem 0.8rem; background:var(--bg); border:1px solid var(--border);
-            border-radius:12px; text-align:center; cursor:pointer; transition:all 0.2s;
+        .icon-btn:hover{background:var(--surface);border-color:var(--border2);}
+        .home-link{
+            padding:.55rem 1.3rem; background:var(--grad); color:#fff; border:none;
+            border-radius:50px; font-size:.83rem; font-weight:600; cursor:pointer;
+            text-decoration:none; font-family:'DM Sans',sans-serif;
+            transition:var(--trans);
         }
-        .light-theme .cat-card { background:var(--surface); }
-        .cat-card:hover { border-color:var(--accent); transform:translateY(-2px); }
-        .cat-card.active { background:var(--gradient); border-color:transparent; color:white; }
-        .cat-icon { font-size:1.6rem; margin-bottom:0.4rem; display:block; }
-        .cat-name { font-size:0.8rem; font-weight:500; }
-        select[style*="display:none"] { display:none !important; }
+        .home-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,92,252,.35);}
 
-        /* File upload */
-        .file-zone {
-            border:2px dashed var(--border); border-radius:12px;
-            padding:2.5rem 1.5rem; text-align:center; cursor:pointer;
-            transition:all 0.3s; background:rgba(124,92,252,0.03);
-            position:relative;
+        /* ── PAGE WRAP ── */
+        .page{padding:7.5rem 5% 5rem; max-width:920px; margin:0 auto; position:relative; z-index:1;}
+
+        /* ── PAGE HERO ── */
+        .page-hero{text-align:center; margin-bottom:3.5rem;}
+        .badge{
+            display:inline-flex; align-items:center; gap:7px;
+            background:rgba(124,92,252,.1); border:1px solid rgba(124,92,252,.28);
+            padding:5px 14px; border-radius:50px; font-size:.78rem; color:var(--accent);
+            font-weight:600; letter-spacing:.05em; text-transform:uppercase; margin-bottom:1.4rem;
         }
-        .file-zone:hover, .file-zone.dragover { border-color:var(--accent); background:rgba(124,92,252,0.07); }
-        .file-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-        .upload-icon { font-size:2.5rem; margin-bottom:0.8rem; color:var(--accent); }
-        .file-zone p { color:var(--muted); font-size:0.9rem; line-height:1.55; }
-        .file-zone strong { color:var(--text); }
-        .file-list { margin-top:1.2rem; display:flex; flex-direction:column; gap:0.6rem; }
-        .file-item {
-            display:flex; align-items:center; gap:0.8rem; padding:0.8rem 1rem;
-            background:rgba(124,92,252,0.06); border-radius:10px;
-            border-left:3px solid var(--accent);
+        .badge-dot{width:6px;height:6px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite;}
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+        .page-title{
+            font-size:clamp(2rem,4.5vw,3rem); font-weight:800; letter-spacing:-.04em;
+            line-height:1.08; margin-bottom:.9rem;
         }
-        .fi-icon { font-size:1.3rem; flex-shrink:0; }
-        .fi-info { flex:1; min-width:0; }
-        .fi-name { font-size:0.88rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .fi-size { font-size:0.75rem; color:var(--muted); }
-        .fi-remove { background:none; border:none; color:var(--error); cursor:pointer; font-size:1.2rem; padding:0 4px; flex-shrink:0; }
-
-        /* Summary */
-        .summary-block { background:var(--bg); border-radius:12px; padding:1.4rem; margin-bottom:1.2rem; border:1px solid var(--border); }
-        .light-theme .summary-block { background:var(--surface); }
-        .summary-block h3 { font-size:0.82rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:1rem; font-family:'Syne',sans-serif; }
-        .sum-row { display:flex; gap:0.8rem; margin-bottom:0.6rem; font-size:0.9rem; }
-        .sum-key { color:var(--muted); flex-shrink:0; min-width:130px; }
-        .sum-val { color:var(--text); word-break:break-word; }
-
-        /* Checkbox */
-        .check-group { display:flex; align-items:flex-start; gap:10px; margin:1.5rem 0; }
-        input[type=checkbox] { width:18px; height:18px; min-width:18px; margin-top:2px; accent-color:var(--accent); cursor:pointer; }
-        .check-label { font-size:0.9rem; color:var(--muted); line-height:1.5; cursor:pointer; }
-        .check-label a { color:var(--accent); }
-
-        /* Buttons */
-        .form-btns { display:flex; justify-content:space-between; margin-top:2rem; gap:1rem; }
-        .btn-next, .btn-submit {
-            padding:0.85rem 2rem; background:var(--gradient); border:none;
-            border-radius:50px; color:white; font-weight:700; cursor:pointer;
-            font-size:0.95rem; font-family:'DM Sans',sans-serif; transition:all 0.2s;
+        .page-title .grad{
+            background:var(--grad-text); -webkit-background-clip:text;
+            background-clip:text; -webkit-text-fill-color:transparent;
         }
-        .btn-next:hover:not(:disabled), .btn-submit:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 28px rgba(124,92,252,0.3); }
-        .btn-prev {
-            padding:0.85rem 2rem; background:transparent; border:1.5px solid var(--border);
-            border-radius:50px; color:var(--text); font-weight:500; cursor:pointer;
-            font-size:0.95rem; font-family:'DM Sans',sans-serif; transition:all 0.2s;
+        .page-sub{color:var(--muted);font-size:1rem;line-height:1.65;max-width:520px;margin:0 auto;}
+
+        /* ── PROGRESS TRACK ── */
+        .progress-wrap{margin-bottom:2.5rem;}
+        .progress-bar-track{
+            height:4px; background:rgba(255,255,255,.06); border-radius:99px;
+            overflow:hidden; margin-bottom:1.4rem; position:relative;
         }
-        .btn-prev:hover { border-color:var(--accent); color:var(--accent); }
-        .btn-submit:disabled { opacity:0.5; cursor:not-allowed; }
-        .btn-spacer { flex:1; }
-
-        /* Success */
-        .success-screen { display:none; text-align:center; padding:3rem 1rem; }
-        .success-screen.active { display:block; animation:fadeUp 0.5s ease; }
-        .success-icon { font-size:3.5rem; margin-bottom:1.2rem; }
-        .success-screen h2 { font-size:1.8rem; margin-bottom:0.8rem; }
-        .success-screen p { color:var(--muted); line-height:1.65; margin-bottom:1.5rem; }
-        .success-box {
-            background:rgba(0,229,200,0.08); border:1px solid rgba(0,229,200,0.25);
-            border-radius:14px; padding:1.5rem; margin:1.5rem 0; text-align:left; font-size:0.92rem; line-height:1.7;
+        .light .progress-bar-track{background:rgba(0,0,0,.07);}
+        .progress-bar-fill{
+            height:100%; background:var(--grad); border-radius:99px;
+            width:25%; transition:width .5s cubic-bezier(.4,0,.2,1);
+            box-shadow:0 0 12px rgba(124,92,252,.6);
         }
-        .success-box p { color:var(--text); margin-bottom:0.5rem; }
-        .success-box p:last-child { margin-bottom:0; }
-        .sub-id { background:var(--bg); border-radius:8px; padding:8px 14px; font-size:0.82rem; color:var(--accent); display:inline-block; margin-top:0.5rem; font-family:monospace; border:1px solid var(--border); }
+        .steps-row{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;}
+        .step-pill{
+            display:flex; align-items:center; gap:6px;
+            padding:5px 13px; border-radius:99px;
+            border:1px solid var(--border); font-size:.78rem; font-weight:500;
+            color:var(--muted); transition:var(--trans); cursor:default;
+            font-family:'DM Sans',sans-serif;
+        }
+        .step-pill.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 18px rgba(124,92,252,.35);}
+        .step-pill.done{border-color:var(--accent2);color:var(--accent2);}
+        .step-pill .sn{font-family:'Syne',sans-serif;font-weight:700;}
+        .step-pill.done .sn::before{content:'✓ ';}
 
-        /* Notification */
-        .notif { position:fixed; top:80px; right:20px; padding:12px 18px; border-radius:12px; color:white; z-index:9999; font-size:0.88rem; max-width:300px; transform:translateX(120%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
-        .notif.show { transform:translateX(0); }
-        .notif.success { background:linear-gradient(135deg,#00b87a,#00e5c8); }
-        .notif.error { background:linear-gradient(135deg,#e53e3e,#fc6b6b); }
+        /* ── FORM CARD ── */
+        .form-card{
+            background:var(--card); border:1px solid var(--border);
+            border-radius:var(--r-xl); padding:2.8rem;
+            box-shadow:var(--shadow-card);
+            position:relative; overflow:hidden;
+        }
+        .form-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:var(--grad);
+        }
+        .light .form-card{box-shadow:0 8px 40px rgba(0,0,0,.08);}
 
-        @media(max-width:600px) {
-            .form-card { padding:1.5rem; }
-            .form-btns { flex-direction:column-reverse; }
-            .btn-next,.btn-prev,.btn-submit { width:100%; text-align:center; }
-            .cat-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); }
+        /* Section head */
+        .section-head{margin-bottom:2.2rem;}
+        .section-head h2{font-size:1.5rem;letter-spacing:-.03em;font-weight:700;}
+        .section-head p{color:var(--muted);font-size:.88rem;margin-top:.35rem;line-height:1.6;}
+
+        /* Form sections animation */
+        .form-section{display:none;}
+        .form-section.active{display:block;animation:fadeSlide .35s ease forwards;}
+        @keyframes fadeSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+        /* ── FORM ELEMENTS ── */
+        .form-group{margin-bottom:1.5rem;}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+        label{
+            display:block; font-size:.84rem; font-weight:500;
+            color:var(--muted); margin-bottom:.48rem; letter-spacing:.01em;
+        }
+        label .req{color:var(--accent);}
+        label .opt{color:var(--muted);font-weight:400;font-size:.78rem;}
+
+        input[type=text],input[type=email],input[type=tel],textarea,select{
+            width:100%; padding:.85rem 1.1rem;
+            background:var(--surface); border:1px solid var(--border);
+            border-radius:var(--r-sm); color:var(--text);
+            font-size:.95rem; font-family:'DM Sans',sans-serif;
+            outline:none; transition:var(--trans);
+            appearance:none;
+        }
+        textarea{min-height:110px;resize:vertical;line-height:1.65;}
+        input:focus,textarea:focus,select:focus{
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px rgba(124,92,252,.14);
+        }
+        input.err,textarea.err,select.err{
+            border-color:var(--err);
+            box-shadow:0 0 0 3px rgba(255,107,107,.12);
+        }
+        .err-msg{
+            color:var(--err); font-size:.76rem; margin-top:.32rem;
+            display:none; align-items:center; gap:4px;
+        }
+        .err-msg.show{display:flex;}
+        .word-count{text-align:right;font-size:.74rem;color:var(--muted);margin-top:.25rem;}
+        .field-hint{font-size:.76rem;color:var(--muted);margin-top:.32rem;line-height:1.55;}
+
+        /* Custom select arrow */
+        .select-wrap{position:relative;}
+        .select-wrap::after{
+            content:'▾'; position:absolute; right:1rem; top:50%;
+            transform:translateY(-50%); color:var(--muted); pointer-events:none;
+            font-size:1rem;
+        }
+        .select-wrap select{padding-right:2.5rem;}
+
+        /* ── PROJECT TYPE CARDS ── */
+        .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.6rem;}
+        .plan-card{
+            padding:1.5rem 1.2rem 1.4rem;
+            background:var(--surface); border:2px solid var(--border);
+            border-radius:var(--r-md); text-align:center;
+            cursor:pointer; transition:var(--trans); position:relative; overflow:hidden;
+        }
+        .plan-card:hover{border-color:var(--accent);transform:translateY(-3px);}
+        .plan-card.selected{border-color:transparent;transform:translateY(-3px);}
+        .plan-card.selected::before{
+            content:''; position:absolute; inset:0;
+            background:var(--grad); opacity:.12;
+        }
+        .plan-card.selected{border:2px solid var(--accent);box-shadow:0 8px 28px rgba(124,92,252,.2);}
+
+        /* Each tier has its own selected color */
+        .plan-card[data-plan="basic"].selected{border-color:var(--accent2);box-shadow:0 8px 28px rgba(0,229,200,.2);}
+        .plan-card[data-plan="basic"].selected::before{background:linear-gradient(135deg,#00e5c8,#0099aa);opacity:.1;}
+        .plan-card[data-plan="professional"].selected{border-color:#ffd166;box-shadow:0 8px 28px rgba(255,209,102,.2);}
+        .plan-card[data-plan="professional"].selected::before{background:linear-gradient(135deg,#ff6b6b,#ffd166);opacity:.1;}
+
+        .plan-emoji{font-size:1.8rem;margin-bottom:.7rem;display:block;}
+        .plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.5rem;}
+        .plan-price{
+            font-family:'Syne',sans-serif;font-weight:800;
+            font-size:.88rem; margin-bottom:.7rem; line-height:1.3;
+        }
+        .plan-card[data-plan="basic"] .plan-price{color:var(--accent2);}
+        .plan-card[data-plan="advance"] .plan-price{color:var(--accent);}
+        .plan-card[data-plan="professional"] .plan-price{color:#ffd166;}
+        .plan-features{list-style:none;font-size:.76rem;color:var(--muted);line-height:1.8;text-align:left;}
+        .plan-features li::before{content:'✓ ';color:var(--accent2);}
+        .plan-badge{
+            position:absolute; top:10px; right:10px;
+            background:var(--grad); color:#fff; font-size:.65rem; font-weight:700;
+            padding:2px 8px; border-radius:50px; letter-spacing:.05em;
+        }
+        .plan-selected-check{
+            position:absolute; top:10px; left:10px;
+            width:20px; height:20px; border-radius:50%;
+            background:var(--grad); display:none; align-items:center;
+            justify-content:center; font-size:.65rem; color:#fff;
+        }
+        .plan-card.selected .plan-selected-check{display:flex;}
+        /* Hidden radio */
+        .plan-radio{display:none;}
+
+        /* ── PRICE PREVIEW BANNER ── */
+        .price-banner{
+            display:none; align-items:center; justify-content:space-between;
+            background:rgba(124,92,252,.08); border:1px solid rgba(124,92,252,.25);
+            border-radius:var(--r-md); padding:1rem 1.4rem;
+            margin-top:1.2rem; gap:1rem; flex-wrap:wrap;
+        }
+        .price-banner.show{display:flex;animation:fadeSlide .3s ease;}
+        .pb-label{font-size:.82rem;color:var(--muted);}
+        .pb-price{
+            font-family:'Syne',sans-serif; font-weight:800; font-size:1.4rem;
+            background:var(--grad-text); -webkit-background-clip:text;
+            background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .pb-note{font-size:.74rem;color:var(--muted);}
+
+        /* ── FILE UPLOAD ── */
+        .file-zone{
+            border:2px dashed var(--border); border-radius:var(--r-md);
+            padding:2.2rem 1.5rem; text-align:center; cursor:pointer;
+            transition:var(--trans); position:relative;
+            background:rgba(124,92,252,.02);
+        }
+        .file-zone:hover,.file-zone.dragover{
+            border-color:var(--accent); background:rgba(124,92,252,.06);
+        }
+        .file-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+        .upload-icon{font-size:2.2rem;margin-bottom:.7rem;color:var(--accent);}
+        .file-zone p{color:var(--muted);font-size:.88rem;line-height:1.6;}
+        .file-zone strong{color:var(--text);}
+        .file-list{margin-top:1rem;display:flex;flex-direction:column;gap:.5rem;}
+        .file-item{
+            display:flex;align-items:center;gap:.8rem;
+            padding:.7rem 1rem; background:rgba(124,92,252,.07);
+            border-radius:var(--r-sm); border-left:3px solid var(--accent);
+        }
+        .fi-icon{font-size:1.2rem;flex-shrink:0;}
+        .fi-info{flex:1;min-width:0;}
+        .fi-name{font-size:.85rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .fi-size{font-size:.72rem;color:var(--muted);}
+        .fi-remove{
+            background:none;border:none;color:var(--err);cursor:pointer;
+            font-size:1.1rem;padding:0 4px;flex-shrink:0;opacity:.7;transition:opacity .2s;
+        }
+        .fi-remove:hover{opacity:1;}
+
+        /* ── SUMMARY ── */
+        .summary-wrap{display:flex;flex-direction:column;gap:1rem;}
+        .sum-block{
+            background:var(--surface); border-radius:var(--r-md);
+            padding:1.3rem 1.5rem; border:1px solid var(--border);
+        }
+        .sum-block h3{
+            font-size:.76rem; text-transform:uppercase; letter-spacing:.1em;
+            color:var(--accent); margin-bottom:.9rem; font-family:'Syne',sans-serif;
+            font-weight:700;
+        }
+        .sum-row{display:flex;gap:.8rem;font-size:.88rem;margin-bottom:.55rem;align-items:flex-start;}
+        .sum-row:last-child{margin-bottom:0;}
+        .sk{color:var(--muted);flex-shrink:0;min-width:130px;}
+        .sv{color:var(--text);word-break:break-word;line-height:1.5;}
+        .sv.price-val{
+            font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;
+            background:var(--grad-text);-webkit-background-clip:text;
+            background-clip:text;-webkit-text-fill-color:transparent;
+        }
+
+        /* ── TERMS ── */
+        .terms-group{
+            display:flex;align-items:flex-start;gap:10px;
+            margin:1.6rem 0 1rem; padding:1.2rem 1.3rem;
+            background:rgba(124,92,252,.05); border-radius:var(--r-sm);
+            border:1px solid var(--border);
+        }
+        input[type=checkbox]{
+            width:17px;height:17px;min-width:17px;
+            margin-top:2px;accent-color:var(--accent);cursor:pointer;
+        }
+        .terms-label{font-size:.86rem;color:var(--muted);line-height:1.55;cursor:pointer;}
+        .terms-label a{color:var(--accent);text-decoration:none;}
+
+        /* ── BUTTONS ── */
+        .form-btns{display:flex;justify-content:space-between;margin-top:2.2rem;gap:1rem;align-items:center;}
+        .btn-next,.btn-submit{
+            padding:.85rem 2.2rem; background:var(--grad);
+            border:none; border-radius:50px; color:#fff;
+            font-weight:700; cursor:pointer; font-size:.95rem;
+            font-family:'DM Sans',sans-serif; transition:var(--trans);
+            display:flex;align-items:center;gap:.5rem;
+        }
+        .btn-next:hover,.btn-submit:hover:not(:disabled){
+            transform:translateY(-2px); box-shadow:0 10px 28px rgba(124,92,252,.35);
+        }
+        .btn-prev{
+            padding:.85rem 2rem; background:transparent;
+            border:1.5px solid var(--border); color:var(--text);
+            border-radius:50px; font-weight:500; cursor:pointer;
+            font-size:.95rem; font-family:'DM Sans',sans-serif; transition:var(--trans);
+        }
+        .btn-prev:hover{border-color:var(--accent);color:var(--accent);}
+        .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+        .btn-spacer{flex:1;}
+        .spin{
+            display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
+            border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* ── SUCCESS SCREEN ── */
+        .success-screen{display:none;text-align:center;padding:2rem 0;}
+        .success-screen.active{display:block;animation:fadeSlide .5s ease;}
+        .success-icon-wrap{
+            width:80px;height:80px;border-radius:50%;background:var(--grad);
+            display:flex;align-items:center;justify-content:center;
+            font-size:2rem;margin:0 auto 1.5rem;
+            box-shadow:0 0 0 12px rgba(124,92,252,.1);
+            animation:iconPop .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+        }
+        @keyframes iconPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+        .success-screen h2{font-size:1.9rem;letter-spacing:-.03em;margin-bottom:.7rem;}
+        .success-screen .sub{color:var(--muted);font-size:.95rem;line-height:1.65;margin-bottom:2rem;}
+
+        /* Highlight confirmation box */
+        .confirm-box{
+            background:rgba(124,92,252,.08); border:1px solid rgba(124,92,252,.28);
+            border-radius:var(--r-lg); padding:2rem; margin-bottom:1.8rem;
+            text-align:left; position:relative; overflow:hidden;
+        }
+        .confirm-box::before{
+            content:''; position:absolute; top:0;left:0;right:0;height:2px;background:var(--grad);
+        }
+        .confirm-box .cfm-greeting{
+            font-size:1.1rem;font-weight:600;margin-bottom:1.2rem;
+        }
+        .confirm-box .cfm-greeting .name{color:var(--accent);}
+        .cfm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem;}
+        .cfm-item{background:var(--card2);border-radius:var(--r-sm);padding:.9rem 1.1rem;}
+        .cfm-item .ci-label{font-size:.73rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
+        .cfm-item .ci-val{font-size:.95rem;font-weight:600;}
+        .cfm-price{
+            background:var(--grad); border-radius:var(--r-sm);
+            padding:1rem 1.4rem; text-align:center; margin-top:.5rem;
+        }
+        .cfm-price .cp-label{font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:.2rem;}
+        .cfm-price .cp-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#fff;}
+
+        /* Next steps */
+        .next-steps{display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem;}
+        .ns-item{
+            display:flex;align-items:flex-start;gap:.9rem;
+            background:var(--surface);border-radius:var(--r-sm);
+            padding:.9rem 1.1rem; border:1px solid var(--border);
+            text-align:left;
+        }
+        .ns-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+        .ns-text{font-size:.88rem;line-height:1.55;color:var(--muted);}
+        .ns-text strong{color:var(--text);}
+
+        .sub-id-row{
+            font-size:.82rem;color:var(--muted);margin-bottom:2rem;
+        }
+        .sub-id{
+            display:inline-block;background:var(--surface);border:1px solid var(--border);
+            padding:4px 12px;border-radius:6px;font-family:monospace;
+            font-size:.82rem;color:var(--accent);margin-left:6px;
+        }
+
+        .success-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+        .btn-wa{
+            padding:.85rem 1.8rem; background:linear-gradient(135deg,#25d366,#128c7e);
+            border:none;border-radius:50px;color:#fff;font-weight:700;font-size:.9rem;
+            cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--trans);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none;
+        }
+        .btn-wa:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.35);}
+        .btn-back{
+            padding:.85rem 1.8rem;border:1.5px solid var(--border);
+            background:none;color:var(--text);border-radius:50px;font-size:.9rem;
+            font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;
+            transition:var(--trans);text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;
+        }
+        .btn-back:hover{border-color:var(--accent);color:var(--accent);}
+
+        /* ── NOTIFICATION TOAST ── */
+        .notif{
+            position:fixed;top:80px;right:20px;
+            padding:12px 18px;border-radius:12px;color:#fff;
+            z-index:9999;font-size:.86rem;max-width:300px;font-weight:500;
+            transform:translateX(130%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+            display:flex;align-items:center;gap:.6rem; box-shadow:0 8px 28px rgba(0,0,0,.3);
+        }
+        .notif.show{transform:translateX(0);}
+        .notif.success{background:linear-gradient(135deg,#00b87a,#00e5c8);}
+        .notif.error{background:linear-gradient(135deg,#e53e3e,#ff6b6b);}
+        .notif.info{background:linear-gradient(135deg,#7c5cfc,#00e5c8);}
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:700px){
+            .form-card{padding:1.6rem 1.3rem;}
+            .plan-grid{grid-template-columns:1fr;}
+            .form-row{grid-template-columns:1fr;}
+            .cfm-grid{grid-template-columns:1fr;}
+            .form-btns{flex-direction:column-reverse;}
+            .btn-next,.btn-prev,.btn-submit{width:100%;justify-content:center;}
+        }
+        @media(max-width:460px){
+            .steps-row .step-pill span:not(.sn){display:none;}
         }
     </style>
 </head>
 <body>
-    <header>
-        <a href="codvex.html" class="logo">
-            <div class="logo-mark">⚡</div>
-            <span class="logo-text">Codvex</span>
-        </a>
-        <button class="theme-btn" id="themeBtn">🌓</button>
-    </header>
 
-    <div class="page-wrap">
-        <div class="page-header">
-            <div class="page-label">Free Website Development</div>
-            <h1 class="page-title">Submit Your Website Idea</h1>
-            <p class="page-sub">Share your concept. If approved, our team builds and deploys your website completely free — you keep 80% of revenue.</p>
+<!-- ── HEADER ── -->
+<header>
+    <a href="codvex.html" class="logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-text">Codvex</span>
+    </a>
+    <div class="header-right">
+        <button class="icon-btn" id="themeBtn" title="Toggle theme">🌓</button>
+        <a href="codvex.html" class="home-link">← Home</a>
+    </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main class="page">
+
+    <!-- Hero -->
+    <div class="page-hero">
+        <div class="badge"><span class="badge-dot"></span> Free Website Development</div>
+        <h1 class="page-title">Submit Your <span class="grad">Website Idea</span></h1>
+        <p class="page-sub">We build, deploy, and host your website completely free. You keep 80% of all revenue — we only earn when you earn.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill"></div>
         </div>
+        <div class="steps-row" id="stepsRow"></div>
+    </div>
 
-        <!-- Progress -->
-        <div class="progress-wrap">
-            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="steps" id="stepsRow"></div>
-        </div>
+    <!-- Form Card -->
+    <div class="form-card">
+        <form id="ideaForm" novalidate autocomplete="off">
 
-        <div class="form-card">
-            <form id="ideaForm" novalidate>
-
-                <!-- Step 1 -->
-                <div class="form-section active" data-step="1">
-                    <div class="section-head">
-                        <h2>Basic Information</h2>
-                        <p>Tell us who you are so we can get in touch.</p>
-                    </div>
+            <!-- ────── STEP 1 · Basic Info ────── -->
+            <div class="form-section active" data-step="1">
+                <div class="section-head">
+                    <h2>Your Information</h2>
+                    <p>Let us know who you are so we can reach you after review.</p>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label for="name">Full Name <span class="req">*</span></label>
-                        <input type="text" id="name" name="name" placeholder="Your full name" required>
-                        <div class="err-msg" id="err-name">Please enter your name.</div>
+                        <input type="text" id="name" name="name" placeholder="Rahul Sharma" required>
+                        <div class="err-msg" id="err-name">⚠ Please enter your full name.</div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address <span class="req">*</span></label>
                         <input type="email" id="email" name="email" placeholder="you@example.com" required>
-                        <div class="err-msg" id="err-email">Please enter a valid email.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210">
-                    </div>
-                    <div class="form-btns">
-                        <div class="btn-spacer"></div>
-                        <button type="button" class="btn-next" data-next="2">Next →</button>
+                        <div class="err-msg" id="err-email">⚠ Please enter a valid email.</div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="phone">WhatsApp / Phone Number <span class="req">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                    <p class="field-hint">We'll send your project summary & pricing estimate here via WhatsApp.</p>
+                    <div class="err-msg" id="err-phone">⚠ Please enter your phone number.</div>
+                </div>
+                <div class="form-btns">
+                    <div class="btn-spacer"></div>
+                    <button type="button" class="btn-next" data-next="2">Next <span>→</span></button>
+                </div>
+            </div>
 
-                <!-- Step 2 -->
-                <div class="form-section" data-step="2">
-                    <div class="section-head">
-                        <h2>Website Details</h2>
-                        <p>Describe your website concept so we can understand your vision.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="websiteName">Website Name <span class="req">*</span></label>
-                        <input type="text" id="websiteName" name="websiteName" placeholder="e.g. TechBlog India" required>
-                        <div class="err-msg" id="err-websiteName">Please enter a website name.</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Category <span class="req">*</span></label>
-                        <select id="category" name="category" required style="display:none;">
-                            <option value="">Select</option>
-                            <option value="blog">Blog</option>
-                            <option value="ecommerce">E-Commerce</option>
-                            <option value="portfolio">Portfolio</option>
-                            <option value="business">Business</option>
-                            <option value="news">News/Magazine</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="education">Educational</option>
-                            <option value="social">Social Media</option>
-                            <option value="other">Other</option>
+            <!-- ────── STEP 2 · Project Details ────── -->
+            <div class="form-section" data-step="2">
+                <div class="section-head">
+                    <h2>Project Details</h2>
+                    <p>Tell us about your website concept and pick the right plan.</p>
+                </div>
+                <div class="form-group">
+                    <label for="websiteName">Website / Project Name <span class="req">*</span></label>
+                    <input type="text" id="websiteName" name="websiteName" placeholder="e.g. TechBlog India, ShopEasy" required>
+                    <div class="err-msg" id="err-websiteName">⚠ Please enter a project name.</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Project Description <span class="req">*</span></label>
+                    <textarea id="description" name="description" placeholder="Describe your website idea in detail — what it does, who it's for, key features, pages you need..." required></textarea>
+                    <div class="word-count"><span id="wc-desc">0</span> words</div>
+                    <div class="err-msg" id="err-description">⚠ Please describe your project.</div>
+                </div>
+                <div class="form-group">
+                    <label for="category">Website Category <span class="req">*</span></label>
+                    <div class="select-wrap">
+                        <select id="category" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="blog">📝 Blog / Content</option>
+                            <option value="ecommerce">🛒 E-Commerce / Store</option>
+                            <option value="portfolio">🎨 Portfolio / Resume</option>
+                            <option value="business">💼 Business / Corporate</option>
+                            <option value="news">📰 News / Magazine</option>
+                            <option value="saas">💻 SaaS / Web App</option>
+                            <option value="education">📚 Educational / Course</option>
+                            <option value="social">🌐 Community / Social</option>
+                            <option value="other">❓ Other</option>
                         </select>
-                        <div class="cat-grid" id="catGrid"></div>
-                        <div class="err-msg" id="err-category">Please select a category.</div>
                     </div>
-                    <div class="form-group">
-                        <label for="description">Website Description <span class="req">*</span></label>
-                        <textarea id="description" name="description" placeholder="Describe your website idea in detail. What pages, features, and goals?" required></textarea>
-                        <div class="word-count"><span id="wc-description">0</span> words</div>
-                        <div class="err-msg" id="err-description">Please describe your website idea.</div>
-                    </div>
-                    <div class="form-btns">
-                        <button type="button" class="btn-prev" data-prev="1">← Back</button>
-                        <button type="button" class="btn-next" data-next="3">Next →</button>
-                    </div>
+                    <div class="err-msg" id="err-category">⚠ Please select a category.</div>
+                </div>
+                <div class="form-btns">
+                    <button type="button" class="btn-prev" data-prev="1">← Back</button>
+                    <button type="button" class="btn-next" data-next="3">Next <span>→</span></button>
+                </div>
+            </div>
+
+            <!-- ────── STEP 3 · Project Type & Pricing ────── -->
+            <div class="form-section" data-step="3">
+                <div class="section-head">
+                    <h2>Choose Your Plan</h2>
+                    <p>Select the complexity level that best matches your project needs.</p>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="form-section" data-step="3">
-                    <div class="section-head">
-                        <h2>Audience & Revenue</h2>
-                        <p>Help us understand who will use your site and how it'll earn.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="targetAudience">Target Audience <span class="req">*</span></label>
-                        <textarea id="targetAudience" name="targetAudience" placeholder="Who is your website for? Age, interests, location, etc." required></textarea>
-                        <div class="word-count"><span id="wc-targetAudience">0</span> words</div>
-                        <div class="err-msg" id="err-targetAudience">Please describe your target audience.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="monetization">Monetization Strategy <span class="req">*</span></label>
-                        <select id="monetization" name="monetization" required>
-                            <option value="">Select a strategy</option>
-                            <option value="ads">Advertisements</option>
-                            <option value="subscriptions">Subscriptions</option>
-                            <option value="ecommerce">Product Sales</option>
-                            <option value="affiliate">Affiliate Marketing</option>
-                            <option value="donations">Donations</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <div class="err-msg" id="err-monetization">Please select a monetization strategy.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="monetizationDetails">Monetization Details <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-                        <textarea id="monetizationDetails" name="monetizationDetails" placeholder="More details about your revenue plan..."></textarea>
-                        <div class="word-count"><span id="wc-monetizationDetails">0</span> words</div>
-                    </div>
-                    <div class="form-btns">
-                        <button type="button" class="btn-prev" data-prev="2">← Back</button>
-                        <button type="button" class="btn-next" data-next="4">Next →</button>
-                    </div>
-                </div>
+                <div class="form-group">
+                    <label>Project Type <span class="req">*</span></label>
+                    <!-- Hidden radio inputs for form value -->
+                    <input type="radio" name="projectType" id="pt-basic"        value="basic"        class="plan-radio">
+                    <input type="radio" name="projectType" id="pt-advance"      value="advance"      class="plan-radio">
+                    <input type="radio" name="projectType" id="pt-professional" value="professional" class="plan-radio">
 
-                <!-- Step 4 -->
-                <div class="form-section" data-step="4">
-                    <div class="section-head">
-                        <h2>References & Files</h2>
-                        <p>Share inspiration and any supporting documents.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="referenceLinks">Reference Links <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-                        <textarea id="referenceLinks" name="referenceLinks" placeholder="Paste URLs that inspire your idea, one per line&#10;https://example.com"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Upload Files <span style="color:var(--muted);font-weight:400;">(optional, max 10MB each)</span></label>
-                        <div class="file-zone" id="fileZone">
-                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.html,.css,.js">
-                            <div class="upload-icon">📁</div>
-                            <p><strong>Drag & drop files or click to browse</strong><br>PDF, DOC, PNG, JPG, HTML, CSS, JS supported</p>
+                    <div class="plan-grid" id="planGrid">
+                        <!-- Basic -->
+                        <div class="plan-card" data-plan="basic" tabindex="0" role="button" aria-label="Basic plan">
+                            <div class="plan-selected-check">✓</div>
+                            <span class="plan-emoji">🌱</span>
+                            <div class="plan-name">Basic</div>
+                            <div class="plan-price">₹7,500 – ₹10,000</div>
+                            <ul class="plan-features">
+                                <li>Up to 5 pages</li>
+                                <li>Static / CMS site</li>
+                                <li>Mobile responsive</li>
+                                <li>Basic SEO setup</li>
+                                <li>Contact form</li>
+                            </ul>
                         </div>
-                        <div class="file-list" id="fileList"></div>
+                        <!-- Advance -->
+                        <div class="plan-card" data-plan="advance" tabindex="0" role="button" aria-label="Advance plan">
+                            <div class="plan-badge">Popular</div>
+                            <div class="plan-selected-check">✓</div>
+                            <span class="plan-emoji">🚀</span>
+                            <div class="plan-name">Advance</div>
+                            <div class="plan-price">₹12,000 – ₹20,000</div>
+                            <ul class="plan-features">
+                                <li>Up to 15 pages</li>
+                                <li>Dynamic / database</li>
+                                <li>Auth & dashboard</li>
+                                <li>Advanced SEO</li>
+                                <li>API integration</li>
+                            </ul>
+                        </div>
+                        <!-- Professional -->
+                        <div class="plan-card" data-plan="professional" tabindex="0" role="button" aria-label="Professional plan">
+                            <div class="plan-selected-check">✓</div>
+                            <span class="plan-emoji">👑</span>
+                            <div class="plan-name">Professional</div>
+                            <div class="plan-price">₹25,000 – ₹50,000</div>
+                            <ul class="plan-features">
+                                <li>Unlimited pages</li>
+                                <li>Full-stack / SaaS</li>
+                                <li>Custom features</li>
+                                <li>E-commerce ready</li>
+                                <li>Priority support</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="form-btns">
-                        <button type="button" class="btn-prev" data-prev="3">← Back</button>
-                        <button type="button" class="btn-next" data-next="5">Next →</button>
+                    <div class="err-msg" id="err-projectType">⚠ Please select a project type.</div>
+
+                    <!-- Price preview banner -->
+                    <div class="price-banner" id="priceBanner">
+                        <div>
+                            <div class="pb-label">Estimated Price Range</div>
+                            <div class="pb-price" id="bannerPrice">—</div>
+                            <div class="pb-note" id="bannerNote">Based on selected plan</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="pb-label">Plan Selected</div>
+                            <div style="font-weight:600;font-size:.95rem;" id="bannerPlan">—</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Step 5 -->
-                <div class="form-section" data-step="5">
-                    <div class="section-head">
-                        <h2>Review & Submit</h2>
-                        <p>Double-check everything before submitting your idea.</p>
-                    </div>
+                <div class="form-group">
+                    <label for="targetAudience">Target Audience <span class="req">*</span></label>
+                    <textarea id="targetAudience" name="targetAudience" placeholder="Who is your website for? Describe age group, interests, location, etc." required></textarea>
+                    <div class="word-count"><span id="wc-audience">0</span> words</div>
+                    <div class="err-msg" id="err-targetAudience">⚠ Please describe your target audience.</div>
+                </div>
 
-                    <div class="summary-block">
-                        <h3>Basic Info</h3>
-                        <div class="sum-row"><span class="sum-key">Name</span><span class="sum-val" id="s-name">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Email</span><span class="sum-val" id="s-email">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Phone</span><span class="sum-val" id="s-phone">—</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <h3>Website Details</h3>
-                        <div class="sum-row"><span class="sum-key">Website Name</span><span class="sum-val" id="s-websiteName">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Category</span><span class="sum-val" id="s-category">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Description</span><span class="sum-val" id="s-description">—</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <h3>Audience & Revenue</h3>
-                        <div class="sum-row"><span class="sum-key">Target Audience</span><span class="sum-val" id="s-targetAudience">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Monetization</span><span class="sum-val" id="s-monetization">—</span></div>
-                        <div class="sum-row"><span class="sum-key">Details</span><span class="sum-val" id="s-monetizationDetails">—</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <h3>References & Files</h3>
-                        <div class="sum-row"><span class="sum-key">Links</span><span class="sum-val" id="s-referenceLinks">None</span></div>
-                        <div class="sum-row"><span class="sum-key">Files</span><span class="sum-val" id="s-files">None</span></div>
-                    </div>
+                <div class="form-group">
+                    <label for="referenceLinks">Reference Links <span class="opt">(optional)</span></label>
+                    <textarea id="referenceLinks" name="referenceLinks" placeholder="Paste URLs for design inspiration, one per line:&#10;https://example.com&#10;https://anothersite.com" style="min-height:80px;"></textarea>
+                </div>
 
-                    <div class="check-group">
-                        <input type="checkbox" id="terms">
-                        <label for="terms" class="check-label">I agree to the terms and conditions and understand the revenue-sharing model — 80% to me, 20% to Codvex for hosting and maintenance.</label>
-                    </div>
+                <div class="form-btns">
+                    <button type="button" class="btn-prev" data-prev="2">← Back</button>
+                    <button type="button" class="btn-next" data-next="4">Next <span>→</span></button>
+                </div>
+            </div>
 
-                    <div class="form-btns">
-                        <button type="button" class="btn-prev" data-prev="4">← Back</button>
-                        <button type="submit" class="btn-submit" id="submitBtn" disabled>Submit Idea ✓</button>
+            <!-- ────── STEP 4 · Review & Submit ────── -->
+            <div class="form-section" data-step="4">
+                <div class="section-head">
+                    <h2>Review & Submit</h2>
+                    <p>Everything look good? Tick the box and submit your idea.</p>
+                </div>
+
+                <div class="summary-wrap" id="summaryWrap">
+                    <div class="sum-block">
+                        <h3>Contact Info</h3>
+                        <div class="sum-row"><span class="sk">Name</span><span class="sv" id="s-name">—</span></div>
+                        <div class="sum-row"><span class="sk">Email</span><span class="sv" id="s-email">—</span></div>
+                        <div class="sum-row"><span class="sk">Phone</span><span class="sv" id="s-phone">—</span></div>
+                    </div>
+                    <div class="sum-block">
+                        <h3>Project Details</h3>
+                        <div class="sum-row"><span class="sk">Project Name</span><span class="sv" id="s-websiteName">—</span></div>
+                        <div class="sum-row"><span class="sk">Category</span><span class="sv" id="s-category">—</span></div>
+                        <div class="sum-row"><span class="sk">Description</span><span class="sv" id="s-description">—</span></div>
+                        <div class="sum-row"><span class="sk">Target Audience</span><span class="sv" id="s-targetAudience">—</span></div>
+                    </div>
+                    <div class="sum-block">
+                        <h3>Plan & Pricing</h3>
+                        <div class="sum-row"><span class="sk">Project Type</span><span class="sv" id="s-planName">—</span></div>
+                        <div class="sum-row"><span class="sk">Price Estimate</span><span class="sv price-val" id="s-price">—</span></div>
                     </div>
                 </div>
-            </form>
 
-            <!-- Success -->
-            <div class="success-screen" id="successScreen">
-                <div class="success-icon">🎉</div>
-                <h2>Idea Submitted!</h2>
-                <p>Thank you for sharing your website idea with Codvex. Our team will review it carefully.</p>
-                <div class="success-box">
-                    <p>📧 <strong>Check your inbox</strong> — a confirmation email is on its way.</p>
-                    <p>⏱️ <strong>Review timeline:</strong> 5–7 business days for our team to evaluate your idea.</p>
-                    <p>📞 <strong>If approved</strong> — Sayed, Umair or Aman will reach out to discuss next steps.</p>
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" name="terms">
+                    <label for="terms" class="terms-label">I understand and agree to the <a href="#">Terms & Conditions</a> and the revenue-sharing model — <strong>80% to me, 20% to Codvex</strong> for hosting and maintenance. I also consent to receive a WhatsApp message with my project estimate.</label>
                 </div>
-                <p style="font-size:0.85rem;color:var(--muted);">Submission ID: <span class="sub-id" id="subId"></span></p>
-                <br>
-                <button class="btn-next" onclick="window.location.href='codvex.html'" style="display:inline-block;text-decoration:none;border:none;cursor:pointer;">← Back to Codvex</button>
-                &nbsp;&nbsp;
-                <button class="btn-prev" onclick="resetForm()" style="display:inline-block;border-radius:50px;padding:0.85rem 2rem;">Submit Another</button>
+
+                <div class="form-btns">
+                    <button type="button" class="btn-prev" data-prev="3">← Back</button>
+                    <button type="submit" class="btn-submit" id="submitBtn" disabled>Submit Idea ✓</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- ── SUCCESS SCREEN ── -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon-wrap">🎉</div>
+            <h2>Idea Submitted!</h2>
+            <p class="sub">Your project is in our hands. Here's a summary of what was shared with you on WhatsApp:</p>
+
+            <!-- Confirmation box -->
+            <div class="confirm-box">
+                <div class="cfm-greeting">Hey, <span class="name" id="cfm-name">there</span>! 👋</div>
+                <div class="cfm-grid">
+                    <div class="cfm-item">
+                        <div class="ci-label">Project</div>
+                        <div class="ci-val" id="cfm-project">—</div>
+                    </div>
+                    <div class="cfm-item">
+                        <div class="ci-label">Plan</div>
+                        <div class="ci-val" id="cfm-plan">—</div>
+                    </div>
+                </div>
+                <div class="cfm-price">
+                    <div class="cp-label">📊 Estimated Price Range</div>
+                    <div class="cp-amount" id="cfm-price">—</div>
+                </div>
+            </div>
+
+            <!-- Next steps -->
+            <div class="next-steps">
+                <div class="ns-item">
+                    <span class="ns-icon">📱</span>
+                    <div class="ns-text"><strong>WhatsApp message sent</strong> — check your phone for the full project summary and estimate.</div>
+                </div>
+                <div class="ns-item">
+                    <span class="ns-icon">⏱️</span>
+                    <div class="ns-text"><strong>Review timeline:</strong> Our team evaluates ideas within 5–7 business days.</div>
+                </div>
+                <div class="ns-item">
+                    <span class="ns-icon">✅</span>
+                    <div class="ns-text"><strong>If approved:</strong> Sayed, Umair or Aman will contact you to kick things off — at zero cost.</div>
+                </div>
+            </div>
+
+            <div class="sub-id-row">
+                Submission ID: <span class="sub-id" id="subId">—</span>
+            </div>
+
+            <div class="success-actions">
+                <a class="btn-wa" id="waBtn" href="#" target="_blank" rel="noopener">
+                    <span>📲</span> Open WhatsApp Chat
+                </a>
+                <button class="btn-back" onclick="resetForm()">
+                    <span>＋</span> Submit Another
+                </button>
+                <a class="btn-back" href="codvex.html">
+                    ← Back to Codvex
+                </a>
             </div>
         </div>
-    </div>
+    </div><!-- /form-card -->
 
-    <div class="notif" id="notifEl"></div>
+</main>
 
-    <script>
-    // Config
-    const STEPS = 5;
-    const STEP_LABELS = ['Basic Info','Website Details','Audience & Revenue','Files & Refs','Review'];
-    const CATEGORIES = [
-        {v:'blog',icon:'📝',name:'Blog'},
-        {v:'ecommerce',icon:'🛒',name:'E-Commerce'},
-        {v:'portfolio',icon:'🎨',name:'Portfolio'},
-        {v:'business',icon:'💼',name:'Business'},
-        {v:'news',icon:'📰',name:'News'},
-        {v:'entertainment',icon:'🎬',name:'Entertainment'},
-        {v:'education',icon:'📚',name:'Educational'},
-        {v:'social',icon:'🌐',name:'Social'},
-        {v:'other',icon:'❓',name:'Other'},
-    ];
-    let currentStep = 1;
-    let selectedFiles = new Map();
+<!-- Toast notification -->
+<div class="notif" id="notifEl"></div>
 
-    // Theme
-    const themeBtn = document.getElementById('themeBtn');
-    if(localStorage.getItem('codvex-theme')==='light'){document.body.classList.add('light-theme');themeBtn.textContent='🌙';}
-    themeBtn.addEventListener('click',()=>{document.body.classList.toggle('light-theme');const l=document.body.classList.contains('light-theme');themeBtn.textContent=l?'🌙':'🌓';localStorage.setItem('codvex-theme',l?'light':'dark');});
+<!-- ──────────────────────────── JAVASCRIPT ──────────────────────────── -->
+<script>
+'use strict';
 
-    // Build step pills
-    const stepsRow = document.getElementById('stepsRow');
-    STEP_LABELS.forEach((label,i)=>{
-        const pill = document.createElement('div');
-        pill.className = 'step-pill' + (i===0?' active':'');
-        pill.dataset.step = i+1;
-        pill.innerHTML = `<span class="step-num">${i+1}</span> ${label}`;
-        stepsRow.appendChild(pill);
-    });
+/* ── PRICING CONFIG ── */
+const PRICING = {
+    basic:        { label:'Basic',        range:'₹7,500 – ₹10,000',  min:7500,   max:10000  },
+    advance:      { label:'Advance',      range:'₹12,000 – ₹20,000', min:12000,  max:20000  },
+    professional: { label:'Professional', range:'₹25,000 – ₹50,000', min:25000,  max:50000  },
+};
 
-    // Build category cards
-    const catGrid = document.getElementById('catGrid');
-    const categorySelect = document.getElementById('category');
-    CATEGORIES.forEach(cat=>{
-        const card = document.createElement('div');
-        card.className='cat-card'; card.dataset.value=cat.v;
-        card.innerHTML=`<span class="cat-icon">${cat.icon}</span><div class="cat-name">${cat.name}</div>`;
-        card.addEventListener('click',()=>{
-            catGrid.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
-            card.classList.add('active'); categorySelect.value=cat.v;
-        });
-        catGrid.appendChild(card);
-    });
+const STEPS = 4;
+const STEP_LABELS = ['Your Info', 'Project', 'Plan & Pricing', 'Review'];
 
-    // Word counters
-    ['description','targetAudience','monetizationDetails'].forEach(id=>{
-        const el=document.getElementById(id);
-        const counter=document.getElementById('wc-'+id);
-        if(el&&counter) el.addEventListener('input',()=>{counter.textContent=el.value.trim().split(/\s+/).filter(w=>w.length).length;});
-    });
+/* ── CODVEX WHATSAPP NUMBER ── Replace with actual number (country code, no +/spaces) ── */
+const CODVEX_WA = '919876543210'; // e.g. 919876543210 for India +91 98765 43210
 
-    // File upload
-    const fileZone = document.getElementById('fileZone');
-    const fileInput = document.getElementById('fileInput');
-    const fileList = document.getElementById('fileList');
-    ['dragenter','dragover'].forEach(e=>fileZone.addEventListener(e,ev=>{ev.preventDefault();fileZone.classList.add('dragover');}));
-    ['dragleave','drop'].forEach(e=>fileZone.addEventListener(e,ev=>{ev.preventDefault();fileZone.classList.remove('dragover');}));
-    fileZone.addEventListener('drop',e=>{handleFiles(e.dataTransfer.files);});
-    fileInput.addEventListener('change',e=>{handleFiles(e.target.files);});
-    function handleFiles(files){
-        [...files].forEach(f=>{
-            if(f.size>10*1024*1024){showNotif(`"${f.name}" exceeds 10MB limit.`,'error');return;}
-            const id = Date.now()+Math.random();
-            selectedFiles.set(id,f);
-            const item = document.createElement('div');
-            item.className='file-item'; item.dataset.id=id;
-            item.innerHTML=`<span class="fi-icon">${fileIcon(f)}</span><div class="fi-info"><div class="fi-name" title="${f.name}">${f.name}</div><div class="fi-size">${fmtSize(f.size)}</div></div><button type="button" class="fi-remove" title="Remove">×</button>`;
-            item.querySelector('.fi-remove').addEventListener('click',()=>{selectedFiles.delete(id);item.remove();});
-            fileList.appendChild(item);
-        });
+let currentStep = 1;
+let selectedPlan = null;
+let selectedFiles = new Map();
+let waUrl = '#';
+
+/* ════════════ THEME ════════════ */
+const themeBtn = document.getElementById('themeBtn');
+(function initTheme() {
+    if (localStorage.getItem('codvex-theme') === 'light') {
+        document.body.classList.add('light');
+        themeBtn.textContent = '🌙';
     }
-    function fileIcon(f){if(f.type.includes('pdf'))return'📄';if(f.type.includes('image'))return'🖼️';if(f.name.endsWith('.html'))return'🌐';if(f.name.endsWith('.css'))return'🎨';if(f.name.endsWith('.js'))return'📜';return'📎';}
-    function fmtSize(b){const k=1024;const s=['B','KB','MB'];const i=Math.floor(Math.log(b)/Math.log(k));return(b/Math.pow(k,i)).toFixed(1)+' '+s[i];}
+})();
+themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    const isLight = document.body.classList.contains('light');
+    themeBtn.textContent = isLight ? '🌙' : '🌓';
+    localStorage.setItem('codvex-theme', isLight ? 'light' : 'dark');
+});
 
-    // Navigation
-    document.querySelectorAll('.btn-next[data-next]').forEach(btn=>{
-        btn.addEventListener('click',()=>{if(validate(currentStep))goTo(parseInt(btn.dataset.next));});
-    });
-    document.querySelectorAll('.btn-prev[data-prev]').forEach(btn=>{
-        btn.addEventListener('click',()=>goTo(parseInt(btn.dataset.prev)));
-    });
+/* ════════════ BUILD STEP PILLS ════════════ */
+const stepsRow = document.getElementById('stepsRow');
+STEP_LABELS.forEach((label, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'step-pill' + (i === 0 ? ' active' : '');
+    pill.dataset.step = i + 1;
+    pill.innerHTML = `<span class="sn">${i + 1}</span><span>${label}</span>`;
+    stepsRow.appendChild(pill);
+});
 
-    function goTo(step){
-        document.querySelector(`.form-section[data-step="${currentStep}"]`).classList.remove('active');
-        currentStep=step;
-        const next=document.querySelector(`.form-section[data-step="${currentStep}"]`);
-        next.classList.remove('active'); void next.offsetWidth; next.classList.add('active');
-        updateProgress();
-        if(step===5) updateSummary();
-        window.scrollTo({top:0,behavior:'smooth'});
-    }
+/* ════════════ PLAN CARDS ════════════ */
+document.querySelectorAll('.plan-card').forEach(card => {
+    const selectPlan = () => {
+        selectedPlan = card.dataset.plan;
+        // Update card visuals
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        // Set hidden radio
+        document.getElementById('pt-' + selectedPlan).checked = true;
+        // Update banner
+        updatePriceBanner(selectedPlan);
+        // Clear error
+        clearErrEl('err-projectType');
+    };
+    card.addEventListener('click', selectPlan);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPlan(); } });
+});
 
-    function updateProgress(){
-        document.getElementById('progressFill').style.width=(currentStep/STEPS*100)+'%';
-        document.querySelectorAll('.step-pill').forEach(p=>{
-            const s=parseInt(p.dataset.step);
-            p.classList.remove('active','done');
-            if(s===currentStep) p.classList.add('active');
-            else if(s<currentStep) p.classList.add('done');
+function updatePriceBanner(plan) {
+    const data = PRICING[plan];
+    if (!data) return;
+    const banner  = document.getElementById('priceBanner');
+    const bPrice  = document.getElementById('bannerPrice');
+    const bNote   = document.getElementById('bannerNote');
+    const bPlan   = document.getElementById('bannerPlan');
+    bPrice.textContent = data.range;
+    bNote.textContent  = 'Estimated cost for ' + data.label + ' tier';
+    bPlan.textContent  = data.label + ' Plan';
+    banner.classList.add('show');
+}
+
+/* ════════════ WORD COUNTERS ════════════ */
+[['description', 'wc-desc'], ['targetAudience', 'wc-audience']].forEach(([id, counterId]) => {
+    const el = document.getElementById(id);
+    const cEl = document.getElementById(counterId);
+    if (el && cEl) {
+        el.addEventListener('input', () => {
+            cEl.textContent = el.value.trim().split(/\s+/).filter(w => w.length).length;
         });
     }
+});
 
-    // Validation
-    function validate(step){
-        let valid=true;
-        const section=document.querySelector(`.form-section[data-step="${step}"]`);
-        section.querySelectorAll('[required]').forEach(f=>{
-            clearErr(f);
-            if(!f.value.trim()){showErr(f,document.getElementById('err-'+f.id));valid=false;}
-            else if(f.type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim())){showErr(f,document.getElementById('err-'+f.id));valid=false;}
-        });
-        if(step===2&&!categorySelect.value){
-            const errEl=document.getElementById('err-category');
-            if(errEl){errEl.style.display='block';}valid=false;
-        }
-        if(!valid) showNotif('Please complete all required fields.','error');
-        return valid;
-    }
-    function showErr(field,errEl){field.classList.add('err');if(errEl)errEl.style.display='block';}
-    function clearErr(field){field.classList.remove('err');const e=document.getElementById('err-'+field.id);if(e)e.style.display='none';}
-    document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',()=>clearErr(el)));
-
-    // Terms checkbox
-    document.getElementById('terms').addEventListener('change',function(){
-        document.getElementById('submitBtn').disabled=!this.checked;
+/* ════════════ NAVIGATION ════════════ */
+document.querySelectorAll('.btn-next[data-next]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (validate(currentStep)) goTo(parseInt(btn.dataset.next));
     });
+});
+document.querySelectorAll('.btn-prev[data-prev]').forEach(btn => {
+    btn.addEventListener('click', () => goTo(parseInt(btn.dataset.prev)));
+});
 
-    // Summary
-    function updateSummary(){
-        const fields=['name','email','phone','websiteName','description','targetAudience','monetizationDetails','referenceLinks'];
-        fields.forEach(id=>{
-            const el=document.getElementById(id);
-            const s=document.getElementById('s-'+id);
-            if(el&&s) s.textContent=el.value.trim()||'—';
-        });
-        const catEl=document.getElementById('category');
-        document.getElementById('s-category').textContent=catEl.options[catEl.selectedIndex]?.text||'—';
-        const monEl=document.getElementById('monetization');
-        document.getElementById('s-monetization').textContent=monEl.options[monEl.selectedIndex]?.text||'—';
-        const names=[...selectedFiles.values()].map(f=>f.name);
-        document.getElementById('s-files').textContent=names.length?names.join(', '):'None';
-    }
-
-    // Form submit
-    document.getElementById('ideaForm').addEventListener('submit',async function(e){
-        e.preventDefault();
-        if(!validate(currentStep)) return;
-        const btn=document.getElementById('submitBtn');
-        btn.textContent='Submitting...'; btn.disabled=true;
-
-        // Simulate submission (replace with real API call when backend is ready)
-        await new Promise(r=>setTimeout(r,1500));
-
-        // Show success
-        document.getElementById('ideaForm').style.display='none';
-        const ss=document.getElementById('successScreen');
-        ss.classList.add('active');
-        document.getElementById('subId').textContent='CVX-'+Date.now().toString(36).toUpperCase();
-        showNotif('Idea submitted successfully!','success');
-    });
-
-    // Notification
-    function showNotif(msg,type){
-        const n=document.getElementById('notifEl');
-        n.textContent=msg; n.className='notif '+type;
-        setTimeout(()=>n.classList.add('show'),50);
-        setTimeout(()=>{n.classList.remove('show');},4500);
-    }
-
-    // Reset
-    function resetForm(){
-        document.getElementById('ideaForm').reset();
-        document.getElementById('ideaForm').style.display='';
-        document.getElementById('successScreen').classList.remove('active');
-        selectedFiles.clear();
-        fileList.innerHTML='';
-        catGrid.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
-        document.getElementById('submitBtn').disabled=true;
-        document.getElementById('terms').checked=false;
-        ['description','targetAudience','monetizationDetails'].forEach(id=>{
-            const c=document.getElementById('wc-'+id);if(c)c.textContent='0';
-        });
-        goTo(1);
-    }
-    window.resetForm=resetForm;
-
-    // Init progress
+function goTo(step) {
+    const from = document.querySelector(`.form-section[data-step="${currentStep}"]`);
+    const to   = document.querySelector(`.form-section[data-step="${step}"]`);
+    if (!from || !to) return;
+    from.classList.remove('active');
+    to.classList.remove('active');
+    void to.offsetWidth; // force reflow for animation
+    to.classList.add('active');
+    currentStep = step;
     updateProgress();
-    </script>
+    if (step === 4) populateSummary();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+    document.getElementById('progressFill').style.width = (currentStep / STEPS * 100) + '%';
+    document.querySelectorAll('.step-pill').forEach(p => {
+        const s = parseInt(p.dataset.step);
+        p.classList.remove('active', 'done');
+        if (s === currentStep) p.classList.add('active');
+        else if (s < currentStep) p.classList.add('done');
+    });
+}
+
+/* ════════════ VALIDATION ════════════ */
+function validate(step) {
+    let valid = true;
+    const section = document.querySelector(`.form-section[data-step="${step}"]`);
+    if (!section) return false;
+
+    // Required inputs / textareas / selects
+    section.querySelectorAll('[required]').forEach(f => {
+        clearErrEl('err-' + f.id);
+        f.classList.remove('err');
+        const val = f.value.trim();
+        if (!val) { markErr(f, 'err-' + f.id); valid = false; return; }
+        if (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+            markErr(f, 'err-' + f.id); valid = false;
+        }
+        if (f.type === 'tel' && val.replace(/\D/g,'').length < 7) {
+            markErr(f, 'err-' + f.id); valid = false;
+        }
+    });
+
+    // Step 3: plan required
+    if (step === 3 && !selectedPlan) {
+        document.getElementById('err-projectType').classList.add('show');
+        valid = false;
+    }
+
+    if (!valid) showNotif('Please fill in all required fields.', 'error');
+    return valid;
+}
+
+function markErr(field, errId) {
+    field.classList.add('err');
+    const errEl = document.getElementById(errId);
+    if (errEl) errEl.classList.add('show');
+}
+function clearErrEl(errId) {
+    const el = document.getElementById(errId);
+    if (el) el.classList.remove('show');
+}
+// Live clear on input
+document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', () => {
+        el.classList.remove('err');
+        clearErrEl('err-' + el.id);
+    });
+});
+
+/* ════════════ TERMS CHECKBOX ════════════ */
+document.getElementById('terms').addEventListener('change', function () {
+    document.getElementById('submitBtn').disabled = !this.checked;
+});
+
+/* ════════════ SUMMARY ════════════ */
+function populateSummary() {
+    const get = id => document.getElementById(id)?.value?.trim() || '—';
+    document.getElementById('s-name').textContent         = get('name');
+    document.getElementById('s-email').textContent        = get('email');
+    document.getElementById('s-phone').textContent        = get('phone');
+    document.getElementById('s-websiteName').textContent  = get('websiteName');
+    document.getElementById('s-description').textContent  = get('description');
+    document.getElementById('s-targetAudience').textContent = get('targetAudience');
+    const catSel = document.getElementById('category');
+    document.getElementById('s-category').textContent = catSel.options[catSel.selectedIndex]?.text || '—';
+    if (selectedPlan) {
+        const pd = PRICING[selectedPlan];
+        document.getElementById('s-planName').textContent = pd.label;
+        document.getElementById('s-price').textContent    = pd.range;
+    }
+}
+
+/* ════════════ WHATSAPP MESSAGE GENERATOR ════════════ */
+function buildWhatsAppMessage(data) {
+    const pd = PRICING[data.plan];
+    const msg = [
+        `👋 *Hello Codvex Team!*`,
+        ``,
+        `I've just submitted my website idea. Here are the details:`,
+        ``,
+        `━━━━━━━━━━━━━━━━━━`,
+        `👤 *Name:* ${data.name}`,
+        `📧 *Email:* ${data.email}`,
+        `📱 *Phone:* ${data.phone}`,
+        `━━━━━━━━━━━━━━━━━━`,
+        `🌐 *Project:* ${data.websiteName}`,
+        `🏷️ *Category:* ${data.category}`,
+        `📋 *Type:* ${pd.label} Plan`,
+        ``,
+        `📝 *Description:*`,
+        data.description,
+        ``,
+        `🎯 *Target Audience:*`,
+        data.targetAudience,
+        ``,
+        `━━━━━━━━━━━━━━━━━━`,
+        `💰 *Estimated Price Range:* ${pd.range}`,
+        `━━━━━━━━━━━━━━━━━━`,
+        ``,
+        `🆔 Submission ID: ${data.submissionId}`,
+        ``,
+        `_Submitted via Codvex.in — Free Website Development_`,
+    ].join('\n');
+
+    return encodeURIComponent(msg);
+}
+
+/* ════════════ FORM SUBMIT ════════════ */
+document.getElementById('ideaForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!validate(currentStep)) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Submitting…';
+
+    const submissionId = 'CVX-' + Date.now().toString(36).toUpperCase();
+
+    const formData = {
+        name:            document.getElementById('name').value.trim(),
+        email:           document.getElementById('email').value.trim(),
+        phone:           document.getElementById('phone').value.trim(),
+        websiteName:     document.getElementById('websiteName').value.trim(),
+        category:        document.getElementById('category').options[document.getElementById('category').selectedIndex]?.text || '',
+        description:     document.getElementById('description').value.trim(),
+        targetAudience:  document.getElementById('targetAudience').value.trim(),
+        referenceLinks:  document.getElementById('referenceLinks').value.trim(),
+        plan:            selectedPlan,
+        submissionId,
+    };
+
+    const pd = PRICING[formData.plan];
+
+    /* ── Try Backend API ── (graceful fallback if not running) */
+    try {
+        const res = await fetch('/api/submit-idea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+            signal: AbortSignal.timeout(5000),
+        });
+        const result = await res.json();
+        if (!result.success) throw new Error(result.message || 'Server error');
+    } catch (err) {
+        // Backend not running – that's OK for the frontend demo
+        console.warn('Backend not available, proceeding with frontend-only flow:', err.message);
+    }
+
+    /* ── Build WhatsApp URL ── */
+    const waMsg  = buildWhatsAppMessage(formData);
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    // If phone starts with 0, remove it and add country code; otherwise use as-is
+    const waPhone = phoneDigits.startsWith('0') ? '91' + phoneDigits.slice(1) : phoneDigits;
+    waUrl = `https://wa.me/${CODVEX_WA}?text=${waMsg}`;
+    const userWaUrl = `https://wa.me/${waPhone}?text=${waMsg}`;
+
+    /* ── Show success ── */
+    this.style.display = 'none';
+    const ss = document.getElementById('successScreen');
+
+    // Fill confirmation box
+    document.getElementById('cfm-name').textContent    = formData.name.split(' ')[0];
+    document.getElementById('cfm-project').textContent = formData.websiteName;
+    document.getElementById('cfm-plan').textContent    = pd.label;
+    document.getElementById('cfm-price').textContent   = pd.range;
+    document.getElementById('subId').textContent       = submissionId;
+    document.getElementById('waBtn').href              = waUrl;
+
+    ss.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    showNotif('Idea submitted! Opening WhatsApp…', 'success');
+
+    // Auto-open WhatsApp after short delay
+    setTimeout(() => { window.open(waUrl, '_blank', 'noopener'); }, 1200);
+});
+
+/* ════════════ RESET ════════════ */
+function resetForm() {
+    document.getElementById('ideaForm').reset();
+    document.getElementById('ideaForm').style.display = '';
+    document.getElementById('successScreen').classList.remove('active');
+    selectedPlan = null;
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('priceBanner').classList.remove('show');
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('terms').checked = false;
+    ['wc-desc', 'wc-audience'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+    });
+    goTo(1);
+}
+window.resetForm = resetForm;
+
+/* ════════════ NOTIFICATION TOAST ════════════ */
+function showNotif(msg, type = 'info') {
+    const n = document.getElementById('notifEl');
+    const icons = { success:'✅', error:'❌', info:'💡' };
+    n.innerHTML = `<span>${icons[type] || ''}</span> ${msg}`;
+    n.className = 'notif ' + type;
+    setTimeout(() => n.classList.add('show'), 50);
+    setTimeout(() => n.classList.remove('show'), 4500);
+}
+
+/* ════════════ INIT ════════════ */
+updateProgress();
+</script>
 </body>
 </html>
